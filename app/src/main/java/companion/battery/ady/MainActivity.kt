@@ -3,9 +3,6 @@ package companion.battery.ady
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
-import android.content.Context
-import android.content.ContextWrapper
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
@@ -25,7 +22,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import companion.battery.ady.ui.theme.BatteryCompanionTheme
@@ -35,15 +31,6 @@ class MainActivity : ComponentActivity() {
 //region Variables
 
     val viewModel: MainViewModel by viewModels()
-
-    private val requestBluetoothPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-
-        if (isGranted)
-            getBlueToothDevices()
-        else
-            Toast.makeText(this, "Permission non accordée", Toast.LENGTH_SHORT).show()
-
-    }
 
 //endregion
 
@@ -62,31 +49,65 @@ class MainActivity : ComponentActivity() {
 
         setContent { MainContent() }
 
-        getBluetoothPermission()
+        getPermissions()
 
     }
 
-    private fun getBluetoothPermission() {
-
-        when (PackageManager.PERMISSION_GRANTED) {
-
-            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) -> getBlueToothDevices()
-            else -> {
-
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    requestBluetoothPermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
-
-            }
-        }
-
-    }
-
-    private fun getBlueToothDevices() {
+    private fun getBluetoothDevices() {
 
         val bluetoothManager: BluetoothManager? = ContextCompat.getSystemService(BatteryCompanionApp.context, BluetoothManager::class.java)
         val bluetoothAdapter: BluetoothAdapter = bluetoothManager?.adapter ?: return
 
         Toast.makeText(this, "getBlueToothDevices", Toast.LENGTH_SHORT).show()
+
+    }
+
+//endregion
+
+//region Permissions
+
+    private fun getPermissions() {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            getPermissionsAboveApiS()
+        else
+            getPermissionsBelowApiS()
+
+    }
+
+    private fun getPermissionsBelowApiS() {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED) {
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                getBluetoothDevices()
+            else
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+
+        } else {
+
+            requestPermissionLauncher.launch(Manifest.permission.BLUETOOTH)
+
+        }
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun getPermissionsAboveApiS() {
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED)
+            getBluetoothDevices()
+        else
+            requestPermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
+
+    }
+
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+
+        if (isGranted)
+            getPermissions()
+        else
+            Toast.makeText(this, "Permission non accordée", Toast.LENGTH_SHORT).show()
 
     }
 
