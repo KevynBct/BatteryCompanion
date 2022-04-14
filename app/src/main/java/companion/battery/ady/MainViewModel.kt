@@ -3,6 +3,7 @@ package companion.battery.ady
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 
 class MainViewModel : ViewModel() {

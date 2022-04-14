@@ -1,16 +1,22 @@
 package companion.battery.ady
 
 import android.Manifest
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.ContextWrapper
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -20,6 +26,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import companion.battery.ady.ui.theme.BatteryCompanionTheme
 
@@ -28,6 +35,15 @@ class MainActivity : ComponentActivity() {
 //region Variables
 
     val viewModel: MainViewModel by viewModels()
+
+    private val requestBluetoothPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+
+        if (isGranted)
+            getBlueToothDevices()
+        else
+            Toast.makeText(this, "Permission non accordée", Toast.LENGTH_SHORT).show()
+
+    }
 
 //endregion
 
@@ -46,24 +62,31 @@ class MainActivity : ComponentActivity() {
 
         setContent { MainContent() }
 
+        getBluetoothPermission()
+
     }
 
     private fun getBluetoothPermission() {
 
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.BLUETOOTH_CONNECT
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return
+        when (PackageManager.PERMISSION_GRANTED) {
+
+            ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) -> getBlueToothDevices()
+            else -> {
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                    requestBluetoothPermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
+
+            }
         }
+
+    }
+
+    private fun getBlueToothDevices() {
+
+        val bluetoothManager: BluetoothManager? = ContextCompat.getSystemService(BatteryCompanionApp.context, BluetoothManager::class.java)
+        val bluetoothAdapter: BluetoothAdapter = bluetoothManager?.adapter ?: return
+
+        Toast.makeText(this, "getBlueToothDevices", Toast.LENGTH_SHORT).show()
 
     }
 
