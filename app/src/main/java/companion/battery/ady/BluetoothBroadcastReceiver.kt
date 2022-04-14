@@ -6,13 +6,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 class BluetoothBroadcastReceiver: BroadcastReceiver() {
 
-    private val _device = MutableLiveData<Device>()
-    val device: LiveData<Device> = _device
+    /*private val _devices = MutableLiveData<List<Device>>(emptyList())
+    val devices: LiveData<List<Device>> = _devices*/
 
     @SuppressLint("MissingPermission")
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -40,7 +41,7 @@ class BluetoothBroadcastReceiver: BroadcastReceiver() {
             }
         }
 
-        _device.value = device
+        Log.i("TEST_", "device : ${device.name}\nconnected : ${device.isConnected}\n")
 
     }
 

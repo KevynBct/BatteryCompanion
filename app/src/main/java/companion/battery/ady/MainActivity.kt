@@ -23,6 +23,8 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
@@ -38,6 +40,7 @@ class MainActivity : ComponentActivity() {
 //region Variables
 
     private val viewModel: MainViewModel by viewModels()
+    private val broadcastReceiver = BluetoothBroadcastReceiver()
 
 //endregion
 
@@ -59,6 +62,20 @@ class MainActivity : ComponentActivity() {
         setContent { MainContent(onRetryButtonTap = { getPermissions() }) }
 
     }
+
+    override fun onStart() {
+        super.onStart()
+        registerReceiver(broadcastReceiver, BluetoothBroadcastReceiver.BluetoothBroadcastFilter)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        unregisterReceiver(broadcastReceiver)
+    }
+
+//endregion
+
+//region Observers
 
 //endregion
 
@@ -112,6 +129,8 @@ fun Content(
     viewModel: MainViewModel = viewModel()
 ) {
 
+    val devices by viewModel.devices.observeAsState(initial = emptyList())
+
     Column(
         modifier = Modifier
             .statusBarsPadding()
@@ -119,7 +138,7 @@ fun Content(
             .verticalScroll(rememberScrollState()),
     ) {
 
-        if (viewModel.devices.isEmpty()) {
+        if (devices.isEmpty()) {
 
             Button(
                 onClick = { onRetryButtonTap() },
@@ -133,7 +152,7 @@ fun Content(
 
         } else {
 
-            viewModel.devices.forEach { BluetoothDeviceItem(device = it) }
+            devices.forEach { BluetoothDeviceItem(device = it) }
 
         }
 
@@ -146,14 +165,18 @@ fun Content(
 
 @SuppressLint("MissingPermission")
 @Composable
-fun BluetoothDeviceItem(device: BluetoothDevice) {
+fun BluetoothDeviceItem(device: Device) {
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(all = 8.dp)
             .clip(RoundedCornerShape(8.dp))
-            .border(width = 1.dp, color = MaterialTheme.colorScheme.tertiary, shape = RoundedCornerShape(8.dp))
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.tertiary,
+                shape = RoundedCornerShape(8.dp)
+            )
             .padding(horizontal = 24.dp, vertical = 16.dp)
     ) {
 

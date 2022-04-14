@@ -22,9 +22,15 @@ class MainRepository @Inject constructor() {
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
-    fun getBluetoothDevices(bluetoothAdapter: BluetoothAdapter?) : List<BluetoothDevice> {
+    fun getBluetoothDevices(bluetoothAdapter: BluetoothAdapter?) : List<Device> {
 
-        return bluetoothAdapter?.bondedDevices?.toList() ?: emptyList()
+        return bluetoothAdapter?.bondedDevices?.map {
+            Device(
+                name = it.name,
+                isConnected = false,
+                macAddress = it.address
+            )
+        } ?: emptyList()
 
     }
 
