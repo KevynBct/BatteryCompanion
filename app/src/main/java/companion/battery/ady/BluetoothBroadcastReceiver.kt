@@ -1,6 +1,6 @@
 package companion.battery.ady
 
-import android.bluetooth.BluetoothAdapter
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -9,25 +9,36 @@ import android.content.IntentFilter
 
 class BluetoothBroadcastReceiver: BroadcastReceiver() {
 
+    val devices = mutableListOf<Device>()
+
+    @SuppressLint("MissingPermission")
     override fun onReceive(context: Context?, intent: Intent?) {
 
         val action = intent?.action
-        val device: BluetoothDevice? = intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+        val bluetoothDevice: BluetoothDevice = intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) ?: return
+
+        val device = Device(
+            name = bluetoothDevice.name,
+            isConnected = false,
+            macAddress = bluetoothDevice.address
+        )
 
         when {
             BluetoothDevice.ACTION_FOUND == action -> {
                 //Device found
             }
             BluetoothDevice.ACTION_ACL_CONNECTED == action -> {
+                device.isConnected = true
                 //Device is now connected
             }
-            BluetoothAdapter.ACTION_DISCOVERY_FINISHED == action -> {
-                //Done searching
-            }
             BluetoothDevice.ACTION_ACL_DISCONNECTED == action -> {
+                device.isConnected = false
                 //Device has disconnected
             }
         }
+
+        devices.removeIf { it.macAddress == device.macAddress }
+        devices.add(device)
 
     }
 
