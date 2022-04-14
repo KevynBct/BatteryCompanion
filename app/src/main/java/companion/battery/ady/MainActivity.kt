@@ -6,16 +6,13 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.pm.PackageManager
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.annotation.RequiresApi
 import androidx.annotation.RequiresPermission
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -25,7 +22,6 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import companion.battery.ady.ui.theme.BatteryCompanionTheme
@@ -62,7 +58,7 @@ class MainActivity : ComponentActivity() {
 
         val bluetoothManager: BluetoothManager? = ContextCompat.getSystemService(BatteryCompanionApp.context, BluetoothManager::class.java)
         val bluetoothAdapter: BluetoothAdapter = bluetoothManager?.adapter ?: return
-        
+
         bluetoothAdapter.bondedDevices.filter { it.bondState == BluetoothDevice.BOND_BONDING }.forEach {
 
             Toast.makeText(this, it.name, Toast.LENGTH_SHORT).show()
@@ -75,33 +71,6 @@ class MainActivity : ComponentActivity() {
 //region Permissions
 
     private fun getPermissions() {
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-            getPermissionsAboveApiS()
-        else
-            getPermissionsBelowApiS()
-
-    }
-
-    private fun getPermissionsBelowApiS() {
-
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED) {
-
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-                getBluetoothDevices()
-            else
-                requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
-
-        } else {
-
-            requestPermissionLauncher.launch(Manifest.permission.BLUETOOTH)
-
-        }
-
-    }
-
-    @RequiresApi(Build.VERSION_CODES.S)
-    private fun getPermissionsAboveApiS() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED)
             getBluetoothDevices()
