@@ -19,20 +19,9 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
-import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
-import androidx.core.view.WindowInsetsCompat
 import companion.battery.ady.ui.theme.BatteryCompanionTheme
-
-fun Context.getActivity(): ComponentActivity? = when (this) {
-    is ComponentActivity -> this
-    is ContextWrapper -> baseContext.getActivity()
-    else -> null
-}
 
 class MainActivity : ComponentActivity() {
 
@@ -104,15 +93,9 @@ fun MainContent() {
 @Composable
 fun Content() {
 
-    val activity = LocalContext.current.getActivity() ?: return
-
-    val windowInsets = ViewCompat.getRootWindowInsets(activity.window.decorView)
-    val systemBarHeight = with(LocalDensity.current) { (windowInsets?.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.systemBars())?.top ?: 0).toDp() }
-    val navigationBarHeight = with(LocalDensity.current) { (windowInsets?.getInsetsIgnoringVisibility(WindowInsetsCompat.Type.navigationBars())?.bottom ?: 0).toDp() }
-
     Column(
         modifier = Modifier
-            .padding(top = systemBarHeight)
+            .statusBarsPadding()
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
     ) {
@@ -136,7 +119,7 @@ fun Content() {
 
         }
 
-        Spacer(modifier = Modifier.height(navigationBarHeight))
+        Spacer(modifier = Modifier.navigationBarsPadding())
 
     }
 
