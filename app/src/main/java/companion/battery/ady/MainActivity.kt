@@ -58,8 +58,6 @@ class MainActivity : ComponentActivity() {
         val bluetoothManager: BluetoothManager? = ContextCompat.getSystemService(BatteryCompanionApp.context, BluetoothManager::class.java)
         val bluetoothAdapter: BluetoothAdapter = bluetoothManager?.adapter ?: return
 
-        Toast.makeText(this, "getBlueToothDevices", Toast.LENGTH_SHORT).show()
-
     }
 
 //endregion
