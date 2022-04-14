@@ -8,8 +8,14 @@ import android.bluetooth.BluetoothManager
 import androidx.annotation.RequiresPermission
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    application: Application,
+    private val repository: MainRepository
+) : AndroidViewModel(application) {
 
 //region Properties
 
@@ -29,11 +35,8 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     fun getBluetoothDevices() {
 
-        if (bluetoothAdapter == null)
-            return
-
         devices.clear()
-        devices.addAll(bluetoothAdapter.bondedDevices)
+        devices.addAll(repository.getBluetoothDevices(bluetoothAdapter))
 
     }
 
