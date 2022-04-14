@@ -1,9 +1,8 @@
 package companion.battery.ady
 
 import android.Manifest
-import android.bluetooth.BluetoothAdapter
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
-import android.bluetooth.BluetoothManager
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
@@ -13,15 +12,21 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.annotation.RequiresPermission
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import companion.battery.ady.ui.theme.BatteryCompanionTheme
@@ -30,7 +35,7 @@ class MainActivity : ComponentActivity() {
 
 //region Variables
 
-    val viewModel: MainViewModel by viewModels()
+    private val viewModel: MainViewModel by viewModels()
 
 //endregion
 
@@ -47,22 +52,9 @@ class MainActivity : ComponentActivity() {
 
         super.onCreate(savedInstanceState)
 
-        setContent { MainContent() }
-
         getPermissions()
 
-    }
-
-    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
-    private fun getBluetoothDevices() {
-
-        val bluetoothManager: BluetoothManager? = ContextCompat.getSystemService(BatteryCompanionApp.context, BluetoothManager::class.java)
-        val bluetoothAdapter: BluetoothAdapter = bluetoothManager?.adapter ?: return
-
-        bluetoothAdapter.bondedDevices.filter { it.bondState == BluetoothDevice.BOND_BONDING }.forEach {
-
-            Toast.makeText(this, it.name, Toast.LENGTH_SHORT).show()
-        }
+        setContent { MainContent(onRetryButtonTap = { getPermissions() }) }
 
     }
 
@@ -73,7 +65,7 @@ class MainActivity : ComponentActivity() {
     private fun getPermissions() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED)
-            getBluetoothDevices()
+            viewModel.getBluetoothDevices()
         else
             requestPermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
 
@@ -95,7 +87,7 @@ class MainActivity : ComponentActivity() {
 //region Composable
 
 @Composable
-fun MainContent() {
+fun MainContent(onRetryButtonTap: () -> Unit) {
 
     BatteryCompanionTheme {
         // A surface container using the 'background' color from the theme
@@ -104,15 +96,19 @@ fun MainContent() {
             color = MaterialTheme.colorScheme.background
         ) {
 
-            Content()
+            Content(onRetryButtonTap = onRetryButtonTap)
 
         }
     }
 
 }
 
+@SuppressLint("MissingPermission")
 @Composable
-fun Content() {
+fun Content(
+    onRetryButtonTap: () -> Unit,
+    viewModel: MainViewModel = viewModel()
+) {
 
     Column(
         modifier = Modifier
@@ -121,22 +117,21 @@ fun Content() {
             .verticalScroll(rememberScrollState()),
     ) {
 
-        for (i in 0..100) {
+        if (viewModel.devices.isEmpty()) {
 
-            Text(
-                text = "Hello M3 theming : primary",
-                color = MaterialTheme.colorScheme.primary
+            Button(
+                onClick = { onRetryButtonTap() },
+                content = {
+                    Text(
+                        text = "Actualiser",
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
             )
 
-            Text(
-                text = "Hello M3 theming : secondary",
-                color = MaterialTheme.colorScheme.secondary
-            )
+        } else {
 
-            Text(
-                text = "Hello M3 theming : tertiary",
-                color = MaterialTheme.colorScheme.tertiary
-            )
+            viewModel.devices.forEach { BluetoothDeviceItem(device = it) }
 
         }
 
@@ -144,6 +139,34 @@ fun Content() {
 
     }
 
+
+}
+
+@SuppressLint("MissingPermission")
+@Composable
+fun BluetoothDeviceItem(device: BluetoothDevice) {
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(all = 8.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .border(width = 1.dp, color = MaterialTheme.colorScheme.tertiary, shape = RoundedCornerShape(8.dp))
+            .padding(horizontal = 24.dp, vertical = 16.dp)
+    ) {
+
+        Text(
+            text = device.name,
+            color = MaterialTheme.colorScheme.primary,
+            fontSize = 20.sp
+        )
+
+        Text(
+            text = device.name,
+            color = MaterialTheme.colorScheme.secondary
+        )
+
+    }
 
 }
 

@@ -47,6 +47,12 @@ android {
 
 dependencies {
 
+    def lifecycle_version = "2.5.0-alpha06"
+    // ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // ViewModel utilities for Compose
+    implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
+
     implementation 'com.google.android.material:material:1.6.0-beta01'
 
     implementation 'com.google.accompanist:accompanist-insets:0.24.6-alpha'
