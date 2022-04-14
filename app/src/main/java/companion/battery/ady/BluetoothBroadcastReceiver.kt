@@ -6,10 +6,13 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 
 class BluetoothBroadcastReceiver: BroadcastReceiver() {
 
-    val devices = mutableListOf<Device>()
+    private val _device = MutableLiveData<Device>()
+    val device: LiveData<Device> = _device
 
     @SuppressLint("MissingPermission")
     override fun onReceive(context: Context?, intent: Intent?) {
@@ -37,8 +40,7 @@ class BluetoothBroadcastReceiver: BroadcastReceiver() {
             }
         }
 
-        devices.removeIf { it.macAddress == device.macAddress }
-        devices.add(device)
+        _device.value = device
 
     }
 
