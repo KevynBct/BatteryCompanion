@@ -41,7 +41,7 @@ class BluetoothBroadcastReceiver: BroadcastReceiver() {
             }
         }
 
-        Log.i("TEST_", "device : ${device.name}\nconnected : ${device.isConnected}\n")
+        Log.i("TEST_", "\ndevice : ${device.name}\nconnected : ${device.isConnected}")
 
     }
 
