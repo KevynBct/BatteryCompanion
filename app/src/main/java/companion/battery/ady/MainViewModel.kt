@@ -2,15 +2,13 @@ package companion.battery.ady
 
 import android.Manifest
 import android.app.Application
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import androidx.annotation.RequiresPermission
-import androidx.compose.runtime.MutableState
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import companion.battery.ady.models.Device
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

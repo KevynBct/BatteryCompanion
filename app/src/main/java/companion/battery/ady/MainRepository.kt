@@ -4,6 +4,7 @@ import android.Manifest
 import android.bluetooth.BluetoothManager
 import androidx.annotation.RequiresPermission
 import companion.battery.ady.extensions.isConnected
+import companion.battery.ady.models.Device
 import javax.inject.Inject
 
 class MainRepository @Inject constructor() {

@@ -1,4 +1,4 @@
-package companion.battery.ady
+package companion.battery.ady.models
 
 data class Device(
     val name: String,

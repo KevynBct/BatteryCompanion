@@ -19,7 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import companion.battery.ady.Device
+import companion.battery.ady.models.Device
 import companion.battery.ady.MainViewModel
 import companion.battery.ady.ui.theme.BatteryCompanionTheme
 
