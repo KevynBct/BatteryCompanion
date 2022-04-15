@@ -20,7 +20,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import companion.battery.ady.models.Device
 import companion.battery.ady.ui.composables.MainContent
-import companion.battery.ady.ui.theme.BatteryCompanionTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -98,7 +97,7 @@ class MainActivity : ComponentActivity() {
 
 //region Broadcast receiver
 
-    class BluetoothBroadcastReceiver: BroadcastReceiver() {
+    inner class BluetoothBroadcastReceiver: BroadcastReceiver() {
 
         @SuppressLint("MissingPermission")
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -125,6 +124,8 @@ class MainActivity : ComponentActivity() {
                     //Device has disconnected
                 }
             }
+
+            viewModel.updateDeviceStatus(device = device)
 
         }
 

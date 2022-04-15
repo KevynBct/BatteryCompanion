@@ -2,14 +2,11 @@ package companion.battery.ady
 
 import android.Manifest
 import android.app.Application
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import androidx.annotation.RequiresPermission
-import androidx.compose.runtime.MutableState
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
 import companion.battery.ady.models.Device
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -28,8 +25,9 @@ class MainViewModel @Inject constructor(
 
 //region Lifecycle
 
-    private val _devices = MutableLiveData<List<Device>>()
-    val devices: LiveData<List<Device>> = _devices
+    val devices = liveData {
+        emitSource(repository.devices)
+    }
 
 //endregion
 
@@ -38,8 +36,12 @@ class MainViewModel @Inject constructor(
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     fun getBluetoothDevices() {
 
-        _devices.value = repository.getBluetoothDevices(manager = bluetoothManager)
+        repository.getBluetoothDevices(manager = bluetoothManager)
 
+    }
+
+    fun updateDeviceStatus(device: Device) {
+        repository.updateDeviceStatus(device = device)
     }
 
 //endregion
