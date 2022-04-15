@@ -1,11 +1,11 @@
 package companion.battery.ady
 
 import android.Manifest
-import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import androidx.annotation.RequiresPermission
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import companion.battery.ady.extensions.isConnected
 import javax.inject.Inject
 
 class MainRepository @Inject constructor() {
@@ -22,14 +22,16 @@ class MainRepository @Inject constructor() {
     }
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
-    fun getBluetoothDevices(bluetoothAdapter: BluetoothAdapter?) : List<Device> {
+    fun getBluetoothDevices(manager: BluetoothManager?) : List<Device> {
 
-        return bluetoothAdapter?.bondedDevices?.map {
+        return manager?.adapter?.bondedDevices?.map {
+
             Device(
                 name = it.name,
-                isConnected = false,
+                isConnected = it.isConnected,
                 macAddress = it.address
             )
+
         } ?: emptyList()
 
     }

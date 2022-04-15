@@ -23,7 +23,6 @@ class MainViewModel @Inject constructor(
 //region Properties
 
     private val bluetoothManager: BluetoothManager? = ContextCompat.getSystemService(BatteryCompanionApp.context, BluetoothManager::class.java)
-    private val bluetoothAdapter: BluetoothAdapter? = bluetoothManager?.adapter
 
 //endregion
 
@@ -39,7 +38,7 @@ class MainViewModel @Inject constructor(
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     fun getBluetoothDevices() {
 
-        _devices.value = repository.getBluetoothDevices(bluetoothAdapter)
+        _devices.value = repository.getBluetoothDevices(manager = bluetoothManager)
 
     }
 
