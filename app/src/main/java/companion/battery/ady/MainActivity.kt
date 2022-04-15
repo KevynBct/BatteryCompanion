@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import companion.battery.ady.models.Device
 import companion.battery.ady.ui.composables.MainContent
+import companion.battery.ady.ui.theme.BatteryCompanionTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
