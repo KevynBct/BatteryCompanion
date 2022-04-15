@@ -47,8 +47,6 @@ fun Content(
     viewModel: MainViewModel = viewModel()
 ) {
 
-    val devices by viewModel.devices.observeAsState(initial = emptyList())
-
     Column(
         modifier = Modifier
             .statusBarsPadding()
@@ -56,7 +54,7 @@ fun Content(
             .verticalScroll(rememberScrollState()),
     ) {
 
-        if (devices.isEmpty()) {
+        if (viewModel.devices.isEmpty()) {
 
             Button(
                 onClick = { onRetryButtonTap() },
@@ -70,7 +68,7 @@ fun Content(
 
         } else {
 
-            devices.forEach { BluetoothDeviceItem(device = it) }
+            viewModel.devices.forEach { BluetoothDeviceItem(device = it) }
 
         }
 

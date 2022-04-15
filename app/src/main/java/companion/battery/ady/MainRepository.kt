@@ -14,33 +14,32 @@ import javax.inject.Inject
 
 class MainRepository @Inject constructor() {
 
-    private val _devices = MutableLiveData<ArrayList<Device>>(arrayListOf())
-    val devices: LiveData<ArrayList<Device>> = _devices
+    var devices = arrayListOf<Device>()
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     fun getBluetoothDevices(manager: BluetoothManager?) {
 
-        _devices.value = ArrayList(manager?.adapter?.bondedDevices?.map {
+        devices.addAll(
 
-            Device(
-                name = it.name,
-                isConnected = it.isConnected,
-                macAddress = it.address
-            )
+            manager?.adapter?.bondedDevices?.map {
 
-        }?.sortedBy { it.isConnected } ?: emptyList())
+                Device(
+                    name = it.name,
+                    isConnected = it.isConnected,
+                    macAddress = it.address
+                )
+
+            }?.sortedByDescending { it.isConnected } ?: emptyList()
+
+        )
 
     }
 
     fun updateDeviceStatus(device: Device) {
 
-        val tmpDevices = _devices.value ?: arrayListOf()
-
-        tmpDevices.removeIf { it.macAddress == device.macAddress }
-        tmpDevices.add(device)
-        tmpDevices.sortBy { it.isConnected }
-
-        _devices.value = tmpDevices
+        devices.removeIf { it.macAddress == device.macAddress }
+        devices.add(device)
+        devices.sortByDescending { it.isConnected }
 
     }
 
