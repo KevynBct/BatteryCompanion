@@ -3,6 +3,10 @@ package companion.battery.ady
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
@@ -45,6 +49,12 @@ class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
     private val broadcastReceiver = BluetoothBroadcastReceiver()
 
+    private val bluetoothBroadcastFilter = IntentFilter().apply {
+        addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
+        addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED)
+        addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
+    }
+
 //endregion
 
 //region Lifecycle
@@ -68,7 +78,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
-        registerReceiver(broadcastReceiver, BluetoothBroadcastReceiver.BluetoothBroadcastFilter)
+        registerReceiver(broadcastReceiver, bluetoothBroadcastFilter)
     }
 
     override fun onStop() {
@@ -99,6 +109,42 @@ class MainActivity : ComponentActivity() {
             getPermissions()
         else
             Toast.makeText(this, "Permission non accordée", Toast.LENGTH_SHORT).show()
+
+    }
+
+//endregion
+
+//region Broadcast receiver
+
+    class BluetoothBroadcastReceiver: BroadcastReceiver() {
+
+        @SuppressLint("MissingPermission")
+        override fun onReceive(context: Context?, intent: Intent?) {
+
+            val action = intent?.action
+            val bluetoothDevice: BluetoothDevice = intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) ?: return
+
+            val device = Device(
+                name = bluetoothDevice.name,
+                isConnected = false,
+                macAddress = bluetoothDevice.address
+            )
+
+            when {
+                BluetoothDevice.ACTION_FOUND == action -> {
+                    //Device found
+                }
+                BluetoothDevice.ACTION_ACL_CONNECTED == action -> {
+                    device.isConnected = true
+                    //Device is now connected
+                }
+                BluetoothDevice.ACTION_ACL_DISCONNECTED == action -> {
+                    device.isConnected = false
+                    //Device has disconnected
+                }
+            }
+
+        }
 
     }
 
