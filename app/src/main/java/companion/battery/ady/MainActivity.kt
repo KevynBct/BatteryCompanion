@@ -112,17 +112,15 @@ class MainActivity : ComponentActivity() {
             )
 
             when {
-                BluetoothDevice.ACTION_FOUND == action -> {
-                    //Device found
-                }
-                BluetoothDevice.ACTION_ACL_CONNECTED == action -> {
-                    device.isConnected = true
-                    //Device is now connected
-                }
-                BluetoothDevice.ACTION_ACL_DISCONNECTED == action -> {
-                    device.isConnected = false
-                    //Device has disconnected
-                }
+
+                //Device found
+                BluetoothDevice.ACTION_FOUND == action -> {}
+
+                //Device is now connected
+                BluetoothDevice.ACTION_ACL_CONNECTED == action -> { device.isConnected = true }
+
+                //Device has disconnected
+                BluetoothDevice.ACTION_ACL_DISCONNECTED == action -> { device.isConnected = false }
             }
 
             viewModel.updateDeviceStatus(device = device)
