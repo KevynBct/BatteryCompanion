@@ -2,12 +2,12 @@ package companion.battery.ady
 
 import android.Manifest
 import android.app.Application
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import androidx.annotation.RequiresPermission
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
-import companion.battery.ady.models.Device
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -25,7 +25,7 @@ class MainViewModel @Inject constructor(
 
 //region Lifecycle
 
-    val devices = mutableStateListOf<Device>()
+    val devices = mutableStateListOf<BluetoothDevice>()
 
 //endregion
 
@@ -39,7 +39,7 @@ class MainViewModel @Inject constructor(
 
     }
 
-    fun updateDevice(device: Device) {
+    fun updateDevice(device: BluetoothDevice) {
         repository.updateDeviceStatus(device = device)
         updateDevices()
     }

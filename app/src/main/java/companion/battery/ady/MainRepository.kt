@@ -1,40 +1,30 @@
 package companion.battery.ady
 
 import android.Manifest
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import androidx.annotation.RequiresPermission
-import companion.battery.ady.extensions.batteryLevel
 import companion.battery.ady.extensions.isConnected
-import companion.battery.ady.models.Device
 import javax.inject.Inject
 
 class MainRepository @Inject constructor() {
 
-    var devices = arrayListOf<Device>()
+    var devices = arrayListOf<BluetoothDevice>()
 
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     fun getBluetoothDevices(manager: BluetoothManager?) {
 
         devices.addAll(
 
-            manager?.adapter?.bondedDevices?.map {
-
-                Device(
-                    name = it.name,
-                    isConnected = it.isConnected,
-                    macAddress = it.address,
-                    battery = it.batteryLevel
-                )
-
-            }?.sortedByDescending { it.isConnected } ?: emptyList()
+            manager?.adapter?.bondedDevices?.sortedByDescending { it.isConnected } ?: emptyList()
 
         )
 
     }
 
-    fun updateDeviceStatus(device: Device) {
+    fun updateDeviceStatus(device: BluetoothDevice) {
 
-        devices.removeIf { it.macAddress == device.macAddress }
+        devices.removeIf { it.address == device.address }
         devices.add(device)
         devices.sortByDescending { it.isConnected }
 

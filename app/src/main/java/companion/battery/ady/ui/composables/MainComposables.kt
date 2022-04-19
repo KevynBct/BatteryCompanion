@@ -1,6 +1,7 @@
 package companion.battery.ady.ui.composables
 
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothDevice
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -17,8 +18,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import companion.battery.ady.models.Device
 import companion.battery.ady.MainViewModel
+import companion.battery.ady.extensions.batteryLevel
+import companion.battery.ady.extensions.isConnected
 import companion.battery.ady.ui.theme.BatteryCompanionTheme
 
 @Composable
@@ -79,7 +81,7 @@ fun Content(
 
 @SuppressLint("MissingPermission")
 @Composable
-fun BluetoothDeviceItem(device: Device) {
+fun BluetoothDeviceItem(device: BluetoothDevice) {
 
     Row(modifier = Modifier
         .alpha(if (device.isConnected) 1f else .5f)
@@ -110,10 +112,10 @@ fun BluetoothDeviceItem(device: Device) {
 
         }
 
-        if (device.isConnected && device.battery >= 0) {
+        if (device.isConnected && device.batteryLevel >= 0) {
 
             Text(
-                text = "${device.battery} %",
+                text = "${device.batteryLevel} %",
                 color = MaterialTheme.colorScheme.primary,
                 fontSize = 20.sp
             )

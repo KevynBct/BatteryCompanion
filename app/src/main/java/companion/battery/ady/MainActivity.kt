@@ -18,9 +18,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
-import companion.battery.ady.extensions.batteryLevel
-import companion.battery.ady.extensions.isConnected
-import companion.battery.ady.models.Device
 import companion.battery.ady.ui.composables.MainContent
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -99,7 +96,7 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
 
     }
 
-    override fun onBroadcastReceive(device: Device) {
+    override fun onBroadcastReceive(device: BluetoothDevice) {
         viewModel.updateDevice(device = device)
     }
 
@@ -133,7 +130,7 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
 
 
 interface BluetoothBroadcastListener {
-    fun onBroadcastReceive(device: Device)
+    fun onBroadcastReceive(device: BluetoothDevice)
 }
 
 class BluetoothBroadcastReceiver: BroadcastReceiver() {
@@ -155,14 +152,7 @@ class BluetoothBroadcastReceiver: BroadcastReceiver() {
 
         val bluetoothDevice: BluetoothDevice = intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) ?: return
 
-        val device = Device(
-            name = bluetoothDevice.name,
-            isConnected = bluetoothDevice.isConnected,
-            macAddress = bluetoothDevice.address,
-            battery = bluetoothDevice.batteryLevel
-        )
-
-        listener?.onBroadcastReceive(device = device)
+        listener?.onBroadcastReceive(device = bluetoothDevice)
 
     }
 
