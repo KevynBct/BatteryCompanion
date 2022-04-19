@@ -19,6 +19,7 @@ import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import companion.battery.ady.extensions.batteryLevel
+import companion.battery.ady.extensions.isConnected
 import companion.battery.ady.models.Device
 import companion.battery.ady.ui.composables.MainContent
 import dagger.hilt.android.AndroidEntryPoint
@@ -111,27 +112,14 @@ class MainActivity : ComponentActivity() {
         @SuppressLint("MissingPermission")
         override fun onReceive(context: Context?, intent: Intent?) {
 
-            val action = intent?.action
             val bluetoothDevice: BluetoothDevice = intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) ?: return
 
             val device = Device(
                 name = bluetoothDevice.name,
-                isConnected = false,
+                isConnected = bluetoothDevice.isConnected,
                 macAddress = bluetoothDevice.address,
                 battery = bluetoothDevice.batteryLevel
             )
-
-            when {
-
-                //Device found
-                BluetoothDevice.ACTION_FOUND == action -> {}
-
-                //Device is now connected
-                BluetoothDevice.ACTION_ACL_CONNECTED == action -> { device.isConnected = true }
-
-                //Device has disconnected
-                BluetoothDevice.ACTION_ACL_DISCONNECTED == action -> { device.isConnected = false }
-            }
 
             viewModel.updateDeviceStatus(device = device)
 
