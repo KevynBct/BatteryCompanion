@@ -3,6 +3,7 @@ package companion.battery.ady
 import android.Manifest
 import android.bluetooth.BluetoothManager
 import androidx.annotation.RequiresPermission
+import companion.battery.ady.extensions.batteryLevel
 import companion.battery.ady.extensions.isConnected
 import companion.battery.ady.models.Device
 import javax.inject.Inject
@@ -21,7 +22,8 @@ class MainRepository @Inject constructor() {
                 Device(
                     name = it.name,
                     isConnected = it.isConnected,
-                    macAddress = it.address
+                    macAddress = it.address,
+                    battery = it.batteryLevel
                 )
 
             }?.sortedByDescending { it.isConnected } ?: emptyList()

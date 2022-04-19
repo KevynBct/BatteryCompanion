@@ -18,6 +18,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import companion.battery.ady.extensions.batteryLevel
 import companion.battery.ady.models.Device
 import companion.battery.ady.ui.composables.MainContent
 import dagger.hilt.android.AndroidEntryPoint
@@ -108,7 +109,8 @@ class MainActivity : ComponentActivity() {
             val device = Device(
                 name = bluetoothDevice.name,
                 isConnected = false,
-                macAddress = bluetoothDevice.address
+                macAddress = bluetoothDevice.address,
+                battery = bluetoothDevice.batteryLevel
             )
 
             when {

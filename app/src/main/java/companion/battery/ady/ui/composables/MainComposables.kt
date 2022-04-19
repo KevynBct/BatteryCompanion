@@ -81,30 +81,48 @@ fun Content(
 @Composable
 fun BluetoothDeviceItem(device: Device) {
 
-    Column(
-        modifier = Modifier
-            .alpha(if (device.isConnected) 1f else .5f)
-            .fillMaxWidth()
-            .padding(all = 8.dp)
-            .clip(RoundedCornerShape(8.dp))
-            .border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.tertiary,
-                shape = RoundedCornerShape(8.dp)
-            )
-            .padding(horizontal = 24.dp, vertical = 16.dp)
+    Row(modifier = Modifier
+        .alpha(if (device.isConnected) 1f else .5f)
+        .fillMaxWidth()
+        .padding(all = 8.dp)
+        .clip(RoundedCornerShape(8.dp))
+        .border(
+            width = 1.dp,
+            color = MaterialTheme.colorScheme.tertiary,
+            shape = RoundedCornerShape(8.dp)
+        )
+        .padding(horizontal = 24.dp, vertical = 16.dp),
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
 
-        Text(
-            text = device.name,
-            color = MaterialTheme.colorScheme.primary,
-            fontSize = 20.sp
-        )
+        Column {
 
-        Text(
-            text = device.name,
-            color = MaterialTheme.colorScheme.secondary
-        )
+            Text(
+                text = device.name,
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 20.sp
+            )
+
+            Text(
+                text = device.name,
+                color = MaterialTheme.colorScheme.secondary
+            )
+
+        }
+
+        if (device.isConnected && device.battery >= 0) {
+
+            Text(
+                text = "${device.battery} %",
+                color = MaterialTheme.colorScheme.primary,
+                fontSize = 20.sp
+            )
+
+        } else {
+
+            Spacer(modifier = Modifier.size(1.dp))
+
+        }
 
     }
 
