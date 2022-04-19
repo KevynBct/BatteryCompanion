@@ -78,10 +78,18 @@ class MainActivity : ComponentActivity() {
 
     private fun getPermissions() {
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED)
-            viewModel.getBluetoothDevices()
-        else
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED)
+                viewModel.getBluetoothDevices()
+            else
+                requestPermissionLauncher.launch(Manifest.permission.BLUETOOTH)
+
+        } else {
+
             requestPermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
+
+        }
 
     }
 
