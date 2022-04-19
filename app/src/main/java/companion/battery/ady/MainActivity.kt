@@ -32,12 +32,6 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
     private val viewModel: MainViewModel by viewModels()
     private val broadcastReceiver = BluetoothBroadcastReceiver()
 
-    private val bluetoothBroadcastFilter = IntentFilter().apply {
-        addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
-        addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED)
-        addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
-    }
-
 //endregion
 
 //region Lifecycle
@@ -62,7 +56,7 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
     override fun onStart() {
         super.onStart()
         broadcastReceiver.listener = this
-        registerReceiver(broadcastReceiver, bluetoothBroadcastFilter)
+        registerReceiver(broadcastReceiver, BluetoothBroadcastReceiver.filters)
     }
 
     override fun onStop() {
@@ -145,6 +139,16 @@ interface BluetoothBroadcastListener {
 class BluetoothBroadcastReceiver: BroadcastReceiver() {
 
     var listener: BluetoothBroadcastListener? = null
+
+    companion object {
+
+        val filters = IntentFilter().apply {
+            addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
+            addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED)
+            addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
+        }
+
+    }
 
     @SuppressLint("MissingPermission")
     override fun onReceive(context: Context?, intent: Intent?) {
