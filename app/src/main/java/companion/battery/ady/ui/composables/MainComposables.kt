@@ -1,6 +1,7 @@
 package companion.battery.ady.ui.composables
 
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -8,13 +9,17 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -112,19 +117,21 @@ fun BluetoothDeviceItem(device: BluetoothDevice) {
 
         }
 
-        if (device.isConnected && device.batteryLevel >= 0) {
-
-            Text(
-                text = "${device.batteryLevel} %",
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 20.sp
-            )
-
-        } else {
-
-            Spacer(modifier = Modifier.size(1.dp))
-
+        val icon = when (device.bluetoothClass.majorDeviceClass) {
+            BluetoothClass.Device.Major.AUDIO_VIDEO -> Icons.Outlined.Headphones
+            BluetoothClass.Device.Major.PHONE -> Icons.Outlined.Phone
+            BluetoothClass.Device.Major.WEARABLE -> Icons.Outlined.Watch
+            BluetoothClass.Device.Major.HEALTH -> Icons.Outlined.HealthAndSafety
+            BluetoothClass.Device.Major.COMPUTER -> Icons.Outlined.Computer
+            else -> Icons.Outlined.Bluetooth
         }
+
+        Icon(
+            modifier = Modifier.size(15.dp),
+            imageVector = icon,
+            tint = if (device.isConnected) Color.Green else Color.Gray,
+            contentDescription = null
+        )
 
     }
 
