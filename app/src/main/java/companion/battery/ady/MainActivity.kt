@@ -25,12 +25,12 @@ import companion.battery.ady.ui.composables.MainContent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
 
 //region Variables
 
     private val viewModel: MainViewModel by viewModels()
-    private val broadcastReceiver = BluetoothBroadcastReceiver()
+    private val broadcastReceiver = BluetoothBroadcastReceiver(listener = this)
 
     private val bluetoothBroadcastFilter = IntentFilter().apply {
         addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
@@ -103,11 +103,15 @@ class MainActivity : ComponentActivity() {
 
     }
 
+    override fun onBroadcastReceive(device: Device) {
+        viewModel.updateDevice(device = device)
+    }
+
 //endregion
 
 //region Broadcast receiver
 
-    inner class BluetoothBroadcastReceiver: BroadcastReceiver() {
+    /*inner class BluetoothBroadcastReceiver: BroadcastReceiver() {
 
         @SuppressLint("MissingPermission")
         override fun onReceive(context: Context?, intent: Intent?) {
@@ -125,8 +129,33 @@ class MainActivity : ComponentActivity() {
 
         }
 
-    }
+    }*/
 
 //endregion
+
+}
+
+
+interface BluetoothBroadcastListener {
+    fun onBroadcastReceive(device: Device)
+}
+
+class BluetoothBroadcastReceiver(private val listener: BluetoothBroadcastListener?): BroadcastReceiver() {
+
+    @SuppressLint("MissingPermission")
+    override fun onReceive(context: Context?, intent: Intent?) {
+
+        val bluetoothDevice: BluetoothDevice = intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) ?: return
+
+        val device = Device(
+            name = bluetoothDevice.name,
+            isConnected = bluetoothDevice.isConnected,
+            macAddress = bluetoothDevice.address,
+            battery = bluetoothDevice.batteryLevel
+        )
+
+        listener?.onBroadcastReceive(device = device)
+
+    }
 
 }

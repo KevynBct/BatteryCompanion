@@ -39,7 +39,7 @@ class MainViewModel @Inject constructor(
 
     }
 
-    fun updateDeviceStatus(device: Device) {
+    fun updateDevice(device: Device) {
         repository.updateDeviceStatus(device = device)
         updateDevices()
     }
