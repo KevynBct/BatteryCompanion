@@ -7,7 +7,6 @@ import androidx.annotation.RequiresPermission
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.liveData
 import companion.battery.ady.models.Device
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -27,9 +26,6 @@ class MainViewModel @Inject constructor(
 //region Lifecycle
 
     val devices = mutableStateListOf<Device>()
-    /*val devices = liveData {
-        emitSource(repository.devices)
-    }*/
 
 //endregion
 
@@ -55,8 +51,7 @@ class MainViewModel @Inject constructor(
     private fun updateDevices() {
 
         devices.clear()
-        devices.addAll(repository.devices
-        )
+        devices.addAll(repository.devices)
     }
 
 //endregion
