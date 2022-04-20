@@ -32,9 +32,11 @@ class BluetoothBroadcastReceiver: BroadcastReceiver() {
 
         val bluetoothDevice: BluetoothDevice = intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) ?: return
 
+        val batteryLevel = intent.getIntExtra("android.bluetooth.device.extra.BATTERY_LEVEL", -2)
+
         val device = Device(
             bluetoothDevice = bluetoothDevice,
-            batteryLevel = intent.getIntExtra("android.bluetooth.device.extra.BATTERY_LEVEL", -2)
+            batteryLevel = batteryLevel
         )
 
         listener?.onBroadcastReceive(device = device)
