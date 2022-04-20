@@ -19,9 +19,9 @@ class BluetoothBroadcastReceiver: BroadcastReceiver() {
     companion object {
 
         val filters = IntentFilter().apply {
-            /*addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
+            addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
             addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED)
-            addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)*/
+            addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
             addAction("android.bluetooth.device.action.BATTERY_LEVEL_CHANGED")
         }
 
@@ -34,7 +34,7 @@ class BluetoothBroadcastReceiver: BroadcastReceiver() {
 
         val device = Device(
             bluetoothDevice = bluetoothDevice,
-            batteryLevel = intent.getIntExtra("android.bluetooth.device.extra.BATTERY_LEVEL", -1)
+            batteryLevel = intent.getIntExtra("android.bluetooth.device.extra.BATTERY_LEVEL", -2)
         )
 
         listener?.onBroadcastReceive(device = device)
