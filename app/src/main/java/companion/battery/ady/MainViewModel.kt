@@ -2,7 +2,6 @@ package companion.battery.ady
 
 import android.Manifest
 import android.app.Application
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import androidx.annotation.RequiresPermission
 import androidx.compose.runtime.mutableStateListOf
@@ -14,8 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    application: Application,
-    private val repository: MainRepository
+    application: Application
 ) : AndroidViewModel(application) {
 
 //region Properties
@@ -35,24 +33,22 @@ class MainViewModel @Inject constructor(
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     fun getBluetoothDevices() {
 
-        repository.getBluetoothDevices(manager = bluetoothManager)
-        updateDevices()
+        val bondedDevices = bluetoothManager?.adapter?.bondedDevices.orEmpty()
 
+        val filteredDevices = bondedDevices
+            .map { Device(it) }
+            .filter { d -> devices.none { d.address == it.address } }
+            .sortedByDescending { it.isConnected }
+
+        devices.addAll(filteredDevices)
     }
 
     fun updateDevice(device: Device) {
-        repository.updateDeviceStatus(device = device)
-        updateDevices()
-    }
 
-//endregion
+        devices.removeIf { it.address == device.address }
+        devices.add(device)
+        devices.sortByDescending { it.isConnected }
 
-//region Private Methods
-
-    private fun updateDevices() {
-
-        devices.clear()
-        devices.addAll(repository.devices)
     }
 
 //endregion
