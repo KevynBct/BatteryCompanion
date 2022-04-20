@@ -18,7 +18,14 @@ class MainViewModel @Inject constructor(
 
 //region Properties
 
-    private val bluetoothManager: BluetoothManager? = ContextCompat.getSystemService(BatteryCompanionApp.context, BluetoothManager::class.java)
+    private val bluetoothAdapter by lazy {
+        val bluetoothManager = ContextCompat.getSystemService(BatteryCompanionApp.context, BluetoothManager::class.java) as BluetoothManager
+        bluetoothManager.adapter
+    }
+
+    private val bleScanner by lazy {
+        bluetoothAdapter.bluetoothLeScanner
+    }
 
 //endregion
 
@@ -33,7 +40,7 @@ class MainViewModel @Inject constructor(
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     fun getBluetoothDevices() {
 
-        val bondedDevices = bluetoothManager?.adapter?.bondedDevices.orEmpty()
+        val bondedDevices = bluetoothAdapter.bondedDevices.orEmpty()
 
         val filteredDevices = bondedDevices
             .map { Device(it) }
