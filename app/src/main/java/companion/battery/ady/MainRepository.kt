@@ -15,13 +15,12 @@ class MainRepository @Inject constructor() {
 
         val bondedDevices = manager?.adapter?.bondedDevices.orEmpty()
 
-        devices.addAll(
+        val filteredDevices = bondedDevices
+            .map { Device(it) }
+            .filter { d -> devices.none { d.address == it.address } }
+            .sortedByDescending { it.isConnected }
 
-            bondedDevices
-                .map { Device(it) }
-                .sortedByDescending { it.isConnected }
-
-        )
+        devices.addAll(filteredDevices)
 
     }
 
