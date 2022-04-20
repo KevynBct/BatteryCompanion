@@ -15,8 +15,6 @@ class MainRepository @Inject constructor() {
 
         val bondedDevices = manager?.adapter?.bondedDevices.orEmpty()
 
-
-
         devices.addAll(
 
             bondedDevices
