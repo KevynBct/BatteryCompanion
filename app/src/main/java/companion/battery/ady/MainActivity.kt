@@ -1,12 +1,7 @@
 package companion.battery.ady
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
@@ -18,6 +13,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import companion.battery.ady.broadcasts.BluetoothBroadcastListener
+import companion.battery.ady.broadcasts.BluetoothBroadcastReceiver
 import companion.battery.ady.ui.composables.MainContent
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -96,64 +93,16 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
 
     }
 
-    override fun onBroadcastReceive(device: BluetoothDevice) {
-        viewModel.updateDevice(device = device)
-    }
+
 
 //endregion
 
 //region Broadcast receiver
 
-    /*inner class BluetoothBroadcastReceiver: BroadcastReceiver() {
-
-        @SuppressLint("MissingPermission")
-        override fun onReceive(context: Context?, intent: Intent?) {
-
-            val bluetoothDevice: BluetoothDevice = intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) ?: return
-
-            val device = Device(
-                name = bluetoothDevice.name,
-                isConnected = bluetoothDevice.isConnected,
-                macAddress = bluetoothDevice.address,
-                battery = bluetoothDevice.batteryLevel
-            )
-
-            viewModel.updateDeviceStatus(device = device)
-
-        }
-
-    }*/
+    override fun onBroadcastReceive(device: BluetoothDevice) {
+        viewModel.updateDevice(device = device)
+    }
 
 //endregion
-
-}
-
-
-interface BluetoothBroadcastListener {
-    fun onBroadcastReceive(device: BluetoothDevice)
-}
-
-class BluetoothBroadcastReceiver: BroadcastReceiver() {
-
-    var listener: BluetoothBroadcastListener? = null
-
-    companion object {
-
-        val filters = IntentFilter().apply {
-            addAction(BluetoothDevice.ACTION_ACL_CONNECTED)
-            addAction(BluetoothDevice.ACTION_ACL_DISCONNECT_REQUESTED)
-            addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED)
-        }
-
-    }
-
-    @SuppressLint("MissingPermission")
-    override fun onReceive(context: Context?, intent: Intent?) {
-
-        val bluetoothDevice: BluetoothDevice = intent?.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE) ?: return
-
-        listener?.onBroadcastReceive(device = bluetoothDevice)
-
-    }
 
 }
