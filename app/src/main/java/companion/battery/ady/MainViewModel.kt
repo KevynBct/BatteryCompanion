@@ -22,11 +22,7 @@ class MainViewModel @Inject constructor(
         val bluetoothManager = ContextCompat.getSystemService(BatteryCompanionApp.context, BluetoothManager::class.java) as BluetoothManager
         bluetoothManager.adapter
     }
-
-    private val bleScanner by lazy {
-        bluetoothAdapter.bluetoothLeScanner
-    }
-
+    
 //endregion
 
 //region Lifecycle
