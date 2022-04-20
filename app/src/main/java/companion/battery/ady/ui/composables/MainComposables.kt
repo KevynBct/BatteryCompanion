@@ -2,7 +2,6 @@ package companion.battery.ady.ui.composables
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothClass
-import android.bluetooth.BluetoothDevice
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -24,8 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import companion.battery.ady.MainViewModel
-import companion.battery.ady.extensions.batteryLevel
-import companion.battery.ady.extensions.isConnected
+import companion.battery.ady.model.Device
 import companion.battery.ady.ui.theme.BatteryCompanionTheme
 
 @Composable
@@ -86,7 +84,7 @@ fun Content(
 
 @SuppressLint("MissingPermission")
 @Composable
-fun BluetoothDeviceItem(device: BluetoothDevice) {
+fun BluetoothDeviceItem(device: Device) {
 
     Row(modifier = Modifier
         .alpha(if (device.isConnected) 1f else .5f)
@@ -117,21 +115,34 @@ fun BluetoothDeviceItem(device: BluetoothDevice) {
 
         }
 
-        val icon = when (device.bluetoothClass.majorDeviceClass) {
-            BluetoothClass.Device.Major.AUDIO_VIDEO -> Icons.Outlined.Headphones
-            BluetoothClass.Device.Major.PHONE -> Icons.Outlined.Phone
-            BluetoothClass.Device.Major.WEARABLE -> Icons.Outlined.Watch
-            BluetoothClass.Device.Major.HEALTH -> Icons.Outlined.HealthAndSafety
-            BluetoothClass.Device.Major.COMPUTER -> Icons.Outlined.Computer
-            else -> Icons.Outlined.Bluetooth
-        }
+        Column {
 
-        Icon(
-            modifier = Modifier.size(15.dp),
-            imageVector = icon,
-            tint = if (device.isConnected) Color.Green else Color.Gray,
-            contentDescription = null
-        )
+            val icon = when (device.bluetoothClass.majorDeviceClass) {
+                BluetoothClass.Device.Major.AUDIO_VIDEO -> Icons.Outlined.Headphones
+                BluetoothClass.Device.Major.PHONE -> Icons.Outlined.Phone
+                BluetoothClass.Device.Major.WEARABLE -> Icons.Outlined.Watch
+                BluetoothClass.Device.Major.HEALTH -> Icons.Outlined.HealthAndSafety
+                BluetoothClass.Device.Major.COMPUTER -> Icons.Outlined.Computer
+                else -> Icons.Outlined.Bluetooth
+            }
+
+            Icon(
+                modifier = Modifier.size(15.dp),
+                imageVector = icon,
+                tint = if (device.isConnected) Color.Green else Color.Gray,
+                contentDescription = null
+            )
+
+            if (device.isConnected && device.battery >= 0) {
+
+                Text(
+                    text = "${device.battery} %",
+                    color = MaterialTheme.colorScheme.secondary
+                )
+
+            }
+
+        }
 
     }
 

@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import companion.battery.ady.broadcasts.BluetoothBroadcastListener
 import companion.battery.ady.broadcasts.BluetoothBroadcastReceiver
+import companion.battery.ady.model.Device
 import companion.battery.ady.ui.composables.MainContent
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -99,7 +100,7 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
 
 //region Broadcast receiver
 
-    override fun onBroadcastReceive(device: BluetoothDevice) {
+    override fun onBroadcastReceive(device: Device) {
         viewModel.updateDevice(device = device)
     }
 

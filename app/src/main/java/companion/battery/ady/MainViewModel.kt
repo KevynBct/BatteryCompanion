@@ -8,6 +8,7 @@ import androidx.annotation.RequiresPermission
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
+import companion.battery.ady.model.Device
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -25,7 +26,7 @@ class MainViewModel @Inject constructor(
 
 //region Lifecycle
 
-    val devices = mutableStateListOf<BluetoothDevice>()
+    val devices = mutableStateListOf<Device>()
 
 //endregion
 
@@ -39,7 +40,7 @@ class MainViewModel @Inject constructor(
 
     }
 
-    fun updateDevice(device: BluetoothDevice) {
+    fun updateDevice(device: Device) {
         repository.updateDeviceStatus(device = device)
         updateDevices()
     }
