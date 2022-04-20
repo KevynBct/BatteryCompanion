@@ -13,9 +13,13 @@ class MainRepository @Inject constructor() {
     @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     fun getBluetoothDevices(manager: BluetoothManager?) {
 
+        val bondedDevices = manager?.adapter?.bondedDevices.orEmpty()
+
         devices.addAll(
 
-            manager?.adapter?.bondedDevices?.map { Device(it) }?.sortedByDescending { it.isConnected } ?: emptyList()
+            bondedDevices
+                .map { Device(it) }
+                .sortedByDescending { it.isConnected }
 
         )
 
