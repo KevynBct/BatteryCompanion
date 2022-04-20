@@ -2,6 +2,7 @@ package companion.battery.ady.model
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothDevice
+import companion.battery.ady.extensions.batteryLevel
 import companion.battery.ady.extensions.isConnected
 
 data class Device(
@@ -24,7 +25,7 @@ data class Device(
     @SuppressLint("MissingPermission")
     constructor(bluetoothDevice: BluetoothDevice) : this(
         bluetoothDevice = bluetoothDevice,
-        batteryLevel = -1
+        batteryLevel = bluetoothDevice.batteryLevel
     )
 
 }
