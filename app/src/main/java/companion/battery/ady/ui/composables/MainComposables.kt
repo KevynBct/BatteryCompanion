@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import companion.battery.ady.MainViewModel
 import companion.battery.ady.model.Device
+import companion.battery.ady.model.DeviceStatus
 import companion.battery.ady.ui.theme.BatteryCompanionTheme
 
 @Composable
@@ -86,8 +87,10 @@ fun Content(
 @Composable
 fun BluetoothDeviceItem(device: Device) {
 
+    val isConnected = device.status == DeviceStatus.CONNECTED
+
     Row(modifier = Modifier
-        .alpha(if (device.isConnected) 1f else .5f)
+        .alpha(if (isConnected) 1f else .5f)
         .fillMaxWidth()
         .padding(all = 8.dp)
         .clip(RoundedCornerShape(8.dp))
@@ -129,11 +132,11 @@ fun BluetoothDeviceItem(device: Device) {
             Icon(
                 modifier = Modifier.size(15.dp),
                 imageVector = icon,
-                tint = if (device.isConnected) Color.Green else Color.Gray,
+                tint = if (isConnected) Color.Green else Color.Gray,
                 contentDescription = null
             )
 
-            if (device.isConnected && device.battery >= 0) {
+            if (isConnected && device.battery >= 0) {
 
                 Text(
                     text = "${device.battery} %",

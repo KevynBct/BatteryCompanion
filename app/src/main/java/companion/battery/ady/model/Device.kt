@@ -9,7 +9,7 @@ data class Device(
     val name: String,
     val address: String,
     val battery: Int,
-    val isConnected: Boolean,
+    val status: DeviceStatus,
     val bluetoothClass: android.bluetooth.BluetoothClass
 ) {
 
@@ -18,7 +18,7 @@ data class Device(
         name = bluetoothDevice.name,
         address = bluetoothDevice.address,
         battery = batteryLevel,
-        isConnected = bluetoothDevice.isConnected,
+        status = bluetoothDevice.isConnected,
         bluetoothClass = bluetoothDevice.bluetoothClass
     )
 
@@ -28,4 +28,20 @@ data class Device(
         batteryLevel = bluetoothDevice.batteryLevel
     )
 
+    @SuppressLint("MissingPermission")
+    constructor(bluetoothDevice: BluetoothDevice, status: DeviceStatus) : this(
+        name = bluetoothDevice.name,
+        address = bluetoothDevice.address,
+        battery = bluetoothDevice.batteryLevel,
+        status = status,
+        bluetoothClass = bluetoothDevice.bluetoothClass
+    )
+
+}
+
+
+enum class DeviceStatus {
+    CONNECTED,
+    CONNECTING,
+    DISCONNECTED,
 }

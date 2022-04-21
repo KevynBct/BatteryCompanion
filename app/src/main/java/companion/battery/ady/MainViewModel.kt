@@ -41,7 +41,7 @@ class MainViewModel @Inject constructor(
         val filteredDevices = bondedDevices
             .map { Device(it) }
             .filter { d -> devices.none { d.address == it.address } }
-            .sortedByDescending { it.isConnected }
+            .sortedByDescending { it.status.ordinal }
 
         devices.addAll(filteredDevices)
     }
@@ -50,7 +50,7 @@ class MainViewModel @Inject constructor(
 
         devices.removeIf { it.address == device.address }
         devices.add(device)
-        devices.sortByDescending { it.isConnected }
+        devices.sortByDescending { it.status.ordinal }
 
     }
 
