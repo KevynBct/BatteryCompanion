@@ -22,7 +22,7 @@ class MainViewModel @Inject constructor(
         val bluetoothManager = ContextCompat.getSystemService(BatteryCompanionApp.context, BluetoothManager::class.java) as BluetoothManager
         bluetoothManager.adapter
     }
-    
+
 //endregion
 
 //region Lifecycle
