@@ -47,18 +47,18 @@ fun BatteryCompanionTheme(
     content: @Composable () -> Unit
 ) {
 
-    /*val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val dynamicColor = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
     val colorScheme = when {
         dynamicColor && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
         dynamicColor && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
-    }*/
+    }
 
-    val colorScheme = when {
+    /*val colorScheme = when {
         darkTheme -> dynamicDarkColorScheme(LocalContext.current)
         else -> dynamicLightColorScheme(LocalContext.current)
-    }
+    }*/
 
     MaterialTheme(
         colorScheme = colorScheme,

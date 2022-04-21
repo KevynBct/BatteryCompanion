@@ -1,7 +1,6 @@
 package companion.battery.ady
 
 import android.Manifest
-import android.bluetooth.BluetoothDevice
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
@@ -70,30 +69,30 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
 
     private fun getPermissions() {
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
-
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH) == PackageManager.PERMISSION_GRANTED)
-                viewModel.getBluetoothDevices()
-            else
-                requestPermissionLauncher.launch(Manifest.permission.BLUETOOTH)
-
-        } else {
-
-            requestPermissionLauncher.launch(Manifest.permission.BLUETOOTH_CONNECT)
-
+        val permissionsGranted = requiredPermissions.all {
+            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
         }
 
+        if (permissionsGranted)
+            viewModel.getBluetoothDevices()
+        else
+            requestPermissionLauncher.launch(requiredPermissions)
+
     }
 
-    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
+    private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
 
-        if (isGranted)
+        if (permissions.all { it.value })
             getPermissions()
         else
-            Toast.makeText(this, "Permission non accordée", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Permissions requises", Toast.LENGTH_SHORT).show()
 
     }
 
+    private val requiredPermissions = arrayOf(
+        Manifest.permission.BLUETOOTH,
+        Manifest.permission.BLUETOOTH_CONNECT
+    )
 
 
 //endregion
