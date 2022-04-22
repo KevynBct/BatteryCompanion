@@ -4,6 +4,9 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothManager
+import android.content.Intent
+import android.content.IntentFilter
+import android.os.BatteryManager
 import android.provider.Settings
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.content.ContextCompat
@@ -11,6 +14,7 @@ import androidx.lifecycle.AndroidViewModel
 import companion.battery.ady.model.Device
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 @SuppressLint("MissingPermission")
@@ -46,6 +50,8 @@ class MainViewModel @Inject constructor(
 
         devices.clear()
         devices.addAll(filteredDevices)
+
+        getCurrentInfo()
     }
 
     fun updateDevice(device: Device) {
@@ -70,11 +76,29 @@ class MainViewModel @Inject constructor(
         val currentDevice = Device(
             name = deviceName,
             address = "",
-            battery = 100,
+            battery = getCurrentBattery(),
             isConnected = true,
             majorDeviceClass = BluetoothClass.Device.Major.PHONE
         )
-        
+
+        updateDevice(currentDevice)
+
+    }
+
+    private fun getCurrentBattery() : Int {
+
+        val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { filter ->
+            BatteryCompanionApp.context.registerReceiver(null, filter)
+        }
+
+        val batteryPct: Float? = batteryStatus?.let { intent ->
+            val level: Int = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
+            val scale: Int = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+            level * 100 / scale.toFloat()
+        }
+
+        return batteryPct?.roundToInt() ?: -1
+
     }
 
 //endregion
