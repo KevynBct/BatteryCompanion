@@ -39,17 +39,21 @@ class MainViewModel @Inject constructor(
 
         val filteredDevices = bondedDevices
             .map { Device(it) }
-            .filter { d -> devices.none { d.address == it.address } }
-            .sortedByDescending { it.status.ordinal }
+            .filter { it.isAvailable }
+            .sortedBy { it.name }
 
+        devices.clear()
         devices.addAll(filteredDevices)
     }
 
     fun updateDevice(device: Device) {
 
         devices.removeIf { it.address == device.address }
-        devices.add(device)
-        devices.sortByDescending { it.status.ordinal }
+
+        if (device.isAvailable) {
+            devices.add(device)
+            devices.sortedBy { it.name }
+        }
 
     }
 

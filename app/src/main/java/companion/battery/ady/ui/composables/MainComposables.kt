@@ -25,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import companion.battery.ady.MainViewModel
 import companion.battery.ady.model.Device
-import companion.battery.ady.model.DeviceStatus
 import companion.battery.ady.ui.theme.BatteryCompanionTheme
 
 @Composable
@@ -95,7 +94,7 @@ fun Content(
 @Composable
 fun BluetoothDeviceItem(device: Device) {
 
-    val isConnected = device.status == DeviceStatus.CONNECTED
+    val isConnected = device.isConnected
 
     Row(modifier = Modifier
         .alpha(if (isConnected) 1f else .5f)
