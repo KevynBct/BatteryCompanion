@@ -124,7 +124,7 @@ fun BluetoothDeviceItem(device: Device) {
 
         Column {
 
-            val icon = when (device.bluetoothClass.majorDeviceClass) {
+            val icon = when (device.majorDeviceClass) {
                 BluetoothClass.Device.Major.AUDIO_VIDEO -> Icons.Outlined.Headphones
                 BluetoothClass.Device.Major.PHONE -> Icons.Outlined.Phone
                 BluetoothClass.Device.Major.WEARABLE -> Icons.Outlined.Watch

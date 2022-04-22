@@ -2,7 +2,9 @@ package companion.battery.ady
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothManager
+import android.provider.Settings
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
@@ -55,6 +57,24 @@ class MainViewModel @Inject constructor(
             devices.sortedBy { it.name }
         }
 
+    }
+
+//endregion
+
+//region Private Methods
+
+    private fun getCurrentInfo() {
+
+        val deviceName  = Settings.Global.getString(BatteryCompanionApp.context.contentResolver, "device_name")
+
+        val currentDevice = Device(
+            name = deviceName,
+            address = "",
+            battery = 100,
+            isConnected = true,
+            majorDeviceClass = BluetoothClass.Device.Major.PHONE
+        )
+        
     }
 
 //endregion

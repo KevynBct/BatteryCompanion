@@ -5,12 +5,21 @@ import android.bluetooth.BluetoothDevice
 import companion.battery.ady.extensions.batteryLevel
 import companion.battery.ady.extensions.isConnected
 
+/**
+ * Device with battery informations
+ *
+ * @param name Device's name
+ * @param address Device's bluetooth MAC address
+ * @param battery Battery level
+ * @param isConnected Indicates if the device is connected or not
+ * @param majorDeviceClass Device's bluetooth class (headphone, watch, phone...)
+ */
 data class Device(
     val name: String,
     val address: String,
     val battery: Int,
     val isConnected: Boolean,
-    val bluetoothClass: android.bluetooth.BluetoothClass
+    val majorDeviceClass: Int
 ) {
 
     val isAvailable: Boolean
@@ -22,7 +31,7 @@ data class Device(
         address = bluetoothDevice.address,
         battery = batteryLevel,
         isConnected = bluetoothDevice.isConnected,
-        bluetoothClass = bluetoothDevice.bluetoothClass
+        majorDeviceClass = bluetoothDevice.bluetoothClass.majorDeviceClass
     )
 
     @SuppressLint("MissingPermission")
