@@ -42,9 +42,14 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
 
         super.onCreate(savedInstanceState)
 
-        getPermissions()
+        setContent { MainContent(onRetryButtonTap = { getBluetoothDevices() }) }
 
-        setContent { MainContent(onRetryButtonTap = { getPermissions() }) }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        getBluetoothDevices()
 
     }
 
@@ -62,13 +67,9 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
 
 //endregion
 
-//region Observers
+//region Private Methods
 
-//endregion
-
-//region Permissions
-
-    private fun getPermissions() {
+    private fun getBluetoothDevices() {
 
         val permissionsGranted = requiredPermissions.all {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
@@ -81,10 +82,14 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
 
     }
 
+//endregion
+
+//region Permissions
+
     private val requestPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
 
         if (permissions.all { it.value })
-            getPermissions()
+            getBluetoothDevices()
         else
             Toast.makeText(this, "Permissions requises", Toast.LENGTH_SHORT).show()
 
