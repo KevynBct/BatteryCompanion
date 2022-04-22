@@ -56,7 +56,7 @@ class MainViewModel @Inject constructor(
 
     fun updateDevice(device: Device) {
 
-        devices.removeIf { it.address == device.address }
+        devices.removeIf { it.id == device.id }
 
         if (device.isAvailable) {
             devices.add(device)
@@ -69,13 +69,14 @@ class MainViewModel @Inject constructor(
 
 //region Private Methods
 
+    @SuppressLint("HardwareIds")
     private fun getCurrentInfo() {
 
         val deviceName  = Settings.Global.getString(BatteryCompanionApp.context.contentResolver, "device_name")
 
         val currentDevice = Device(
             name = deviceName,
-            address = "",
+            id = Settings.Secure.getString(BatteryCompanionApp.context.contentResolver, Settings.Secure.ANDROID_ID),
             battery = getCurrentBattery(),
             isConnected = true,
             majorDeviceClass = BluetoothClass.Device.Major.PHONE

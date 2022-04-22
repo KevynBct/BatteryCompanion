@@ -116,7 +116,7 @@ fun BluetoothDeviceItem(device: Device) {
             )
 
             Text(
-                text = device.name,
+                text = device.id,
                 color = MaterialTheme.colorScheme.secondary
             )
 

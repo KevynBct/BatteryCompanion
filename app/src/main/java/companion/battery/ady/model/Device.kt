@@ -9,14 +9,14 @@ import companion.battery.ady.extensions.isConnected
  * Device with battery informations
  *
  * @param name Device's name
- * @param address Device's bluetooth MAC address
+ * @param id Device's id (bluetooth MAC address or unique device's ID)
  * @param battery Battery level
  * @param isConnected Indicates if the device is connected or not
  * @param majorDeviceClass Device's bluetooth class (headphone, watch, phone...)
  */
 data class Device(
     val name: String,
-    val address: String,
+    val id: String,
     val battery: Int,
     val isConnected: Boolean,
     val majorDeviceClass: Int
@@ -28,7 +28,7 @@ data class Device(
     @SuppressLint("MissingPermission")
     constructor(bluetoothDevice: BluetoothDevice, batteryLevel: Int) : this(
         name = bluetoothDevice.name,
-        address = bluetoothDevice.address,
+        id = bluetoothDevice.address,
         battery = batteryLevel,
         isConnected = bluetoothDevice.isConnected,
         majorDeviceClass = bluetoothDevice.bluetoothClass.majorDeviceClass
