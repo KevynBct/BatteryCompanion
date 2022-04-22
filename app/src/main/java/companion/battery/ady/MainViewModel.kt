@@ -31,11 +31,10 @@ class MainViewModel @Inject constructor(
 
 //endregion
 
-//region Lifecycle
+//region LiveData
 
     private val _devices = mutableStateListOf<Device>()
-    val devices: List<Device>
-        get() = _devices.filter { it.isAvailable }.sortedBy { it.name }
+    val devices: List<Device> get() = _devices.filter { it.isAvailable }.sortedBy { it.name }
 
 //endregion
 
@@ -60,10 +59,8 @@ class MainViewModel @Inject constructor(
 
         _devices.removeIf { it.id == device.id }
 
-        if (device.isAvailable) {
+        if (device.isAvailable)
             _devices.add(device)
-            //devices.sortBy { it.name }
-        }
 
     }
 
