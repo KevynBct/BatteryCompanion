@@ -33,7 +33,9 @@ class MainViewModel @Inject constructor(
 
 //region Lifecycle
 
-    val devices = mutableStateListOf<Device>()
+    private val _devices = mutableStateListOf<Device>()
+    val devices: List<Device>
+        get() = _devices.filter { it.isAvailable }.sortedBy { it.name }
 
 //endregion
 
@@ -48,19 +50,19 @@ class MainViewModel @Inject constructor(
             .filter { it.isAvailable }
             .sortedBy { it.name }
 
-        devices.clear()
-        devices.addAll(filteredDevices)
+        _devices.clear()
+        _devices.addAll(filteredDevices)
 
         getCurrentInfo()
     }
 
     fun updateDevice(device: Device) {
 
-        devices.removeIf { it.id == device.id }
+        _devices.removeIf { it.id == device.id }
 
         if (device.isAvailable) {
-            devices.add(device)
-            devices.sortedBy { it.name }
+            _devices.add(device)
+            //devices.sortBy { it.name }
         }
 
     }
