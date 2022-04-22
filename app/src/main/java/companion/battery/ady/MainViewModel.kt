@@ -1,9 +1,8 @@
 package companion.battery.ady
 
-import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Application
 import android.bluetooth.BluetoothManager
-import androidx.annotation.RequiresPermission
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.AndroidViewModel
@@ -12,6 +11,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
 @HiltViewModel
+@SuppressLint("MissingPermission")
 class MainViewModel @Inject constructor(
     application: Application
 ) : AndroidViewModel(application) {
@@ -33,7 +33,6 @@ class MainViewModel @Inject constructor(
 
 //region Public Methods
 
-    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     fun getBluetoothDevices() {
 
         val bondedDevices = bluetoothAdapter.bondedDevices.orEmpty()

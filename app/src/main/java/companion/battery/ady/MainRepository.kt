@@ -1,16 +1,15 @@
 package companion.battery.ady
 
-import android.Manifest
+import android.annotation.SuppressLint
 import android.bluetooth.BluetoothManager
-import androidx.annotation.RequiresPermission
 import companion.battery.ady.model.Device
 import javax.inject.Inject
 
+@SuppressLint("MissingPermission")
 class MainRepository @Inject constructor() {
 
     var devices = arrayListOf<Device>()
 
-    @RequiresPermission(Manifest.permission.BLUETOOTH_CONNECT)
     fun getBluetoothDevices(manager: BluetoothManager?) {
 
         val bondedDevices = manager?.adapter?.bondedDevices.orEmpty()

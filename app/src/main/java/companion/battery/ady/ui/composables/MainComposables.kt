@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
@@ -60,15 +61,22 @@ fun Content(
 
         if (viewModel.devices.isEmpty()) {
 
-            Button(
-                onClick = { onRetryButtonTap() },
-                content = {
-                    Text(
-                        text = "Actualiser",
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                }
-            )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ){
+
+                Button(
+                    onClick = { onRetryButtonTap() },
+                    content = {
+                        Text(
+                            text = "Actualiser",
+                            color = MaterialTheme.colorScheme.tertiary
+                        )
+                    }
+                )
+
+            }
 
         } else {
 

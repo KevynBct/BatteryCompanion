@@ -3,6 +3,7 @@ package companion.battery.ady
 import android.Manifest
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.Toast
@@ -89,10 +90,14 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
 
     }
 
-    private val requiredPermissions = arrayOf(
-        Manifest.permission.BLUETOOTH,
-        Manifest.permission.BLUETOOTH_CONNECT
-    )
+    private val requiredPermissions = buildList {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+            add(Manifest.permission.BLUETOOTH_CONNECT)
+        else
+            add(Manifest.permission.ACCESS_FINE_LOCATION)
+
+    }.toTypedArray()
 
 
 //endregion
