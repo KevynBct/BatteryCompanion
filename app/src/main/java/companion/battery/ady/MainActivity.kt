@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
 
         super.onCreate(savedInstanceState)
 
-        setContent { MainContent(onRetryButtonTap = { getBluetoothDevices() }) }
+        setContent { MainContent() }
 
     }
 

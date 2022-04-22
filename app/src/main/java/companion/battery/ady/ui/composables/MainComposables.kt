@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -28,7 +27,7 @@ import companion.battery.ady.model.Device
 import companion.battery.ady.ui.theme.BatteryCompanionTheme
 
 @Composable
-fun MainContent(onRetryButtonTap: () -> Unit) {
+fun MainContent(viewModel: MainViewModel = viewModel()) {
 
     BatteryCompanionTheme {
         // A surface container using the 'background' color from the theme
@@ -37,19 +36,41 @@ fun MainContent(onRetryButtonTap: () -> Unit) {
             color = MaterialTheme.colorScheme.background
         ) {
 
-            Content(onRetryButtonTap = onRetryButtonTap)
+            if (viewModel.devices.isEmpty()) {
+
+                EmptyContent()
+
+            } else {
+
+                DevicesList(devices = viewModel.devices)
+
+
+            }
 
         }
     }
 
 }
 
-@SuppressLint("MissingPermission")
 @Composable
-fun Content(
-    onRetryButtonTap: () -> Unit,
-    viewModel: MainViewModel = viewModel()
-) {
+fun EmptyContent() {
+
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ){
+
+        Text(
+            modifier = Modifier.align(Alignment.Center),
+            text = "Aucun appareil disponible",
+            color = MaterialTheme.colorScheme.tertiary
+        )
+
+    }
+
+}
+@Composable
+fun DevicesList(devices: List<Device>) {
 
     Column(
         modifier = Modifier
@@ -58,35 +79,11 @@ fun Content(
             .verticalScroll(rememberScrollState()),
     ) {
 
-        if (viewModel.devices.isEmpty()) {
-
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ){
-
-                Button(
-                    onClick = { onRetryButtonTap() },
-                    content = {
-                        Text(
-                            text = "Actualiser",
-                            color = MaterialTheme.colorScheme.tertiary
-                        )
-                    }
-                )
-
-            }
-
-        } else {
-
-            viewModel.devices.forEach { BluetoothDeviceItem(device = it) }
-
-        }
+        devices.forEach { BluetoothDeviceItem(device = it) }
 
         Spacer(modifier = Modifier.navigationBarsPadding())
 
     }
-
 
 }
 
