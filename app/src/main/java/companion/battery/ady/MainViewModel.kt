@@ -78,7 +78,7 @@ class MainViewModel @Inject constructor(
             id = Settings.Secure.getString(BatteryCompanionApp.context.contentResolver, Settings.Secure.ANDROID_ID),
             battery = getCurrentBattery(),
             isConnected = true,
-            majorDeviceClass = BluetoothClass.Device.Major.UNCATEGORIZED
+            majorDeviceClass = BluetoothClass.Device.Major.PHONE
         )
 
         updateDevice(currentDevice)
