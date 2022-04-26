@@ -46,7 +46,7 @@ class MainViewModel @Inject constructor(
 
         val filteredDevices = bondedDevices
             .map { Device(it) }
-            .filter { it.isAvailable }
+            .filter { it.isConnected }
             .sortedBy { it.name }
 
         _devices.clear()
@@ -59,7 +59,7 @@ class MainViewModel @Inject constructor(
 
         _devices.removeIf { it.id == device.id }
 
-        if (device.isAvailable)
+        if (device.isConnected)
             _devices.add(device)
 
     }
