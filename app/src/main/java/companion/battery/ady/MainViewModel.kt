@@ -34,7 +34,7 @@ class MainViewModel @Inject constructor(
 //region LiveData
 
     private val _devices = mutableStateListOf<Device>()
-    val devices: List<Device> get() = _devices.filter { it.isAvailable }.sortedBy { it.name }
+    val devices: List<Device> get() = _devices.filter { it.isConnected }.sortedBy { it.name }
 
 //endregion
 
