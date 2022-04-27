@@ -106,14 +106,13 @@ fun BluetoothDeviceItem(device: Device) {
     Card(
         modifier = Modifier
             .alpha(if (isConnected) 1f else .5f)
-            .clip(RoundedCornerShape(8.dp))
-            .fillMaxWidth()
-            .padding(all = 8.dp)
+            .fillMaxWidth(.8f)
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(8.dp)
             )
             .padding(horizontal = 24.dp, vertical = 16.dp),
+        shape = RoundedCornerShape(8.dp)
     ) {
 
         Row(
