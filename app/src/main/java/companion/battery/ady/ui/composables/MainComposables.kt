@@ -2,6 +2,7 @@ package companion.battery.ady.ui.composables
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothClass
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -111,13 +112,13 @@ fun BluetoothDeviceItem(device: Device) {
 
             Text(
                 text = device.name,
-                color = MaterialTheme.colorScheme.primary,
-                fontSize = 20.sp
+                fontSize = 20.sp,
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             Text(
                 text = device.id,
-                color = MaterialTheme.colorScheme.secondary
+                color = MaterialTheme.colorScheme.onBackground
             )
 
         }
