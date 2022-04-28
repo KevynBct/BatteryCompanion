@@ -89,6 +89,12 @@ fun DevicesList(viewModel: MainViewModel = viewModel()) {
 
         item {
 
+            Spacer(modifier = Modifier.size(40.dp))
+
+        }
+
+        item {
+
             val itemSize: Dp = (LocalConfiguration.current.screenWidthDp.dp / 2) - 10.dp
 
             FlowRow(
@@ -120,7 +126,7 @@ fun DevicesList(viewModel: MainViewModel = viewModel()) {
 
             ColorItemList()
 
-            Spacer(modifier = Modifier.navigationBarsPadding())
+            Spacer(modifier = Modifier.size(40.dp))
 
         }
 
@@ -206,20 +212,12 @@ fun DeviceWithoutBatteryItem(device: Device) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
-            Column {
-
-                Text(
-                    text = device.name,
-                    fontSize = 20.sp,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-                Text(
-                    text = device.id,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-
-            }
+            SurfaceText(
+                text = device.name,
+                fontSize = 17.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
 
             Column {
 
