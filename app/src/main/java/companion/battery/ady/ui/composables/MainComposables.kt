@@ -2,6 +2,7 @@ package companion.battery.ady.ui.composables
 
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothClass
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,6 +35,7 @@ import companion.battery.ady.ui.theme.BatteryCompanionTheme
 
 @Composable
 @ExperimentalMaterial3Api
+@ExperimentalFoundationApi
 fun MainContent(viewModel: MainViewModel = viewModel()) {
 
     BatteryCompanionTheme {
@@ -76,9 +78,12 @@ fun EmptyContent() {
     }
 
 }
+@ExperimentalFoundationApi
 @Composable
 @ExperimentalMaterial3Api
 fun DevicesList(viewModel: MainViewModel = viewModel()) {
+
+    val itemSize: Dp = (LocalConfiguration.current.screenWidthDp.dp / 2) - 10.dp
 
     LazyColumn(
         modifier = Modifier
@@ -95,14 +100,23 @@ fun DevicesList(viewModel: MainViewModel = viewModel()) {
 
         item {
 
-            val itemSize: Dp = (LocalConfiguration.current.screenWidthDp.dp / 2) - 10.dp
 
             FlowRow(
                 mainAxisSize = SizeMode.Expand,
                 mainAxisAlignment = FlowMainAxisAlignment.SpaceBetween
             ) {
 
-                viewModel.devicesWithInfo.forEach { DeviceWithBatteryItem(device = it, width = itemSize) }
+                viewModel.devicesWithInfo.forEach {
+
+                    DeviceWithBatteryItem(
+                        modifier = Modifier
+                            .width(itemSize)
+                            .animateItemPlacement(),
+                        device = it
+                    )
+
+
+                }
 
             }
 
@@ -137,11 +151,11 @@ fun DevicesList(viewModel: MainViewModel = viewModel()) {
 @ExperimentalMaterial3Api
 @SuppressLint("MissingPermission")
 @Composable
-fun DeviceWithBatteryItem(width: Dp, device: Device) {
+fun DeviceWithBatteryItem(modifier: Modifier, device: Device) {
 
     Card(
         modifier = Modifier
-            .width(width)
+            .then(modifier)
             .padding(vertical = 8.dp)
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
