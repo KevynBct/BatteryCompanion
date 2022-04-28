@@ -161,12 +161,14 @@ fun DeviceWithBatteryItem(width: Dp, device: Device) {
                 contentAlignment = Alignment.Center
             ) {
 
+                val color = if (device.battery <= 20) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+
                 CircularProgressIndicator(
                     modifier = Modifier
                         .fillMaxWidth()
                         .aspectRatio(1f),
                     progress = device.battery / 100f,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = color,
                     strokeWidth = 4.dp
                 )
 
