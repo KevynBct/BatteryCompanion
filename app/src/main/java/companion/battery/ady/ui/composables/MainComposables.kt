@@ -4,9 +4,8 @@ import android.annotation.SuppressLint
 import android.bluetooth.BluetoothClass
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
@@ -20,10 +19,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode
 import companion.battery.ady.MainViewModel
 import companion.battery.ady.model.Device
 import companion.battery.ady.ui.theme.BatteryCompanionTheme
@@ -76,34 +80,49 @@ fun EmptyContent() {
 @ExperimentalMaterial3Api
 fun DevicesList(viewModel: MainViewModel = viewModel()) {
 
-
-    Column(
+    LazyColumn(
         modifier = Modifier
             .statusBarsPadding()
             .padding(horizontal = 8.dp)
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
+            .fillMaxSize(),
     ) {
 
-        viewModel.devicesWithInfo.forEach { DeviceWithBatteryItem(device = it) }
+        item {
 
-        Spacer(modifier = Modifier.size(10.dp))
+            val itemSize: Dp = (LocalConfiguration.current.screenWidthDp.dp / 2) - 10.dp
 
-        Text(
-            text = "Autres appareils",
-            fontSize = 20.sp,
-            color = MaterialTheme.colorScheme.onBackground
-        )
+            FlowRow(
+                mainAxisSize = SizeMode.Expand,
+                mainAxisAlignment = FlowMainAxisAlignment.SpaceBetween
+            ) {
 
-        Spacer(modifier = Modifier.size(10.dp))
+                viewModel.devicesWithInfo.forEach { DeviceWithBatteryItem(device = it, width = itemSize) }
 
-        viewModel.devicesWithoutInfo.forEach { DeviceWithoutBatteryItem(device = it) }
+            }
 
-        Spacer(modifier = Modifier.size(40.dp))
+        }
 
-        ColorItemList()
+        item {
 
-        Spacer(modifier = Modifier.navigationBarsPadding())
+            Spacer(modifier = Modifier.size(10.dp))
+
+            Text(
+                text = "Autres appareils",
+                fontSize = 20.sp,
+                color = MaterialTheme.colorScheme.onBackground
+            )
+
+            Spacer(modifier = Modifier.size(10.dp))
+
+            viewModel.devicesWithoutInfo.forEach { DeviceWithoutBatteryItem(device = it) }
+
+            Spacer(modifier = Modifier.size(40.dp))
+
+            ColorItemList()
+
+            Spacer(modifier = Modifier.navigationBarsPadding())
+
+        }
 
     }
 
@@ -112,10 +131,11 @@ fun DevicesList(viewModel: MainViewModel = viewModel()) {
 @ExperimentalMaterial3Api
 @SuppressLint("MissingPermission")
 @Composable
-fun DeviceWithBatteryItem(device: Device) {
+fun DeviceWithBatteryItem(width: Dp, device: Device) {
 
     Card(
         modifier = Modifier
+            .width(width)
             .padding(vertical = 8.dp)
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
