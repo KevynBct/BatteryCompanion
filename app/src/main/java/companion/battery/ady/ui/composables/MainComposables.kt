@@ -123,6 +123,10 @@ fun DeviceWithBatteryItem(device: Device) {
         shape = RoundedCornerShape(8.dp)
     ) {
 
+        Column() {
+
+        }
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
