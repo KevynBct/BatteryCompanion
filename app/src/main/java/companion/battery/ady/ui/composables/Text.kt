@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.TextUnit
 
 @Composable
 fun SurfaceText(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     text: String,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,
@@ -57,7 +57,7 @@ fun SurfaceText(
 
 @Composable
 fun BackgroundText(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     text: String,
     fontSize: TextUnit = TextUnit.Unspecified,
     fontStyle: FontStyle? = null,

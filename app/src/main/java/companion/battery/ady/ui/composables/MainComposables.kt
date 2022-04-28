@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -19,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -123,52 +125,35 @@ fun DeviceWithBatteryItem(device: Device) {
         shape = RoundedCornerShape(8.dp)
     ) {
 
-        Column() {
+        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+            
+            SurfaceText(
+                text = device.name,
+                fontSize = 17.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
 
-        }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f),
+                contentAlignment = Alignment.Center
+            ) {
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-
-            Column {
-
-                Text(
-                    text = device.name,
-                    fontSize = 20.sp,
-                    color = MaterialTheme.colorScheme.onSurface
+                CircularProgressIndicator(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f),
+                    progress = device.battery / 100f,
+                    color = MaterialTheme.colorScheme.primary,
+                    strokeWidth = 4.dp
                 )
 
-                Text(
-                    text = device.id,
-                    color = MaterialTheme.colorScheme.onSurface
+                SurfaceText(
+                    text = "${device.battery} %"
                 )
 
-            }
-
-            Column(horizontalAlignment = Alignment.End) {
-
-                val icon = when (device.majorDeviceClass) {
-                    BluetoothClass.Device.Major.AUDIO_VIDEO -> Icons.Outlined.Headphones
-                    BluetoothClass.Device.Major.PHONE -> Icons.Outlined.Phone
-                    BluetoothClass.Device.Major.WEARABLE -> Icons.Outlined.Watch
-                    BluetoothClass.Device.Major.HEALTH -> Icons.Outlined.HealthAndSafety
-                    BluetoothClass.Device.Major.COMPUTER -> Icons.Outlined.Computer
-                    else -> Icons.Outlined.Bluetooth
-                }
-
-                Icon(
-                    modifier = Modifier.size(15.dp),
-                    imageVector = icon,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    contentDescription = null
-                )
-
-                Text(
-                    text = "${device.battery} %",
-                    color = MaterialTheme.colorScheme.onSurface
-                )
 
             }
 
