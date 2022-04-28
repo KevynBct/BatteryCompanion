@@ -3,7 +3,6 @@ package companion.battery.ady.ui.composables
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothClass
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,7 +19,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -84,7 +82,7 @@ fun DevicesList(devices: List<Device>) {
             .verticalScroll(rememberScrollState()),
     ) {
 
-        devices.forEach { BluetoothDeviceItem(device = it) }
+        devices.forEach { FullDeviceItem(device = it) }
 
         Spacer(modifier = Modifier.size(40.dp))
 
@@ -99,7 +97,7 @@ fun DevicesList(devices: List<Device>) {
 @ExperimentalMaterial3Api
 @SuppressLint("MissingPermission")
 @Composable
-fun BluetoothDeviceItem(device: Device) {
+fun FullDeviceItem(device: Device) {
 
     val isConnected = device.isConnected
 
