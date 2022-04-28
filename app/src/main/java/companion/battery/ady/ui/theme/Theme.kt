@@ -6,18 +6,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple500,
-    secondary = Teal200,
-    tertiary = Purple700
-)
-
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple200,
-    secondary = Teal200,
-    tertiary = Purple700
-)
-
 @Composable
 fun BatteryCompanionTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
@@ -28,8 +16,8 @@ fun BatteryCompanionTheme(
     val colorScheme = when {
         dynamicColor && darkTheme -> dynamicDarkColorScheme(LocalContext.current)
         dynamicColor && !darkTheme -> dynamicLightColorScheme(LocalContext.current)
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+        darkTheme -> darkColorScheme()
+        else -> lightColorScheme()
     }
 
     MaterialTheme(
