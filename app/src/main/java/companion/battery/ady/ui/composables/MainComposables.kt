@@ -18,7 +18,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,13 +37,13 @@ fun MainContent(viewModel: MainViewModel = viewModel()) {
             color = MaterialTheme.colorScheme.background
         ) {
 
-            if (viewModel.devices.isEmpty()) {
+            if (viewModel.devicesWithInfo.isEmpty()) {
 
                 EmptyContent()
 
             } else {
 
-                DevicesList(devices = viewModel.devices)
+                DevicesList()
 
 
             }
@@ -73,16 +72,30 @@ fun EmptyContent() {
 }
 @Composable
 @ExperimentalMaterial3Api
-fun DevicesList(devices: List<Device>) {
+fun DevicesList(viewModel: MainViewModel = viewModel()) {
+
 
     Column(
         modifier = Modifier
             .statusBarsPadding()
+            .padding(horizontal = 8.dp)
             .fillMaxSize()
             .verticalScroll(rememberScrollState()),
     ) {
 
-        devices.forEach { FullDeviceItem(device = it) }
+        viewModel.devicesWithInfo.forEach { DeviceWithBatteryItem(device = it) }
+
+        Spacer(modifier = Modifier.size(10.dp))
+
+        Text(
+            text = "Autres appareils",
+            fontSize = 20.sp,
+            color = MaterialTheme.colorScheme.onBackground
+        )
+
+        Spacer(modifier = Modifier.size(10.dp))
+
+        viewModel.devicesWithoutInfo.forEach { DeviceWithoutBatteryItem(device = it) }
 
         Spacer(modifier = Modifier.size(40.dp))
 
@@ -97,14 +110,78 @@ fun DevicesList(devices: List<Device>) {
 @ExperimentalMaterial3Api
 @SuppressLint("MissingPermission")
 @Composable
-fun FullDeviceItem(device: Device) {
-
-    val isConnected = device.isConnected
+fun DeviceWithBatteryItem(device: Device) {
 
     Card(
         modifier = Modifier
-            .alpha(if (isConnected) 1f else .5f)
-            .fillMaxWidth(.8f)
+            .padding(vertical = 8.dp)
+            .background(
+                color = MaterialTheme.colorScheme.surfaceVariant,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(horizontal = 24.dp, vertical = 16.dp),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Column {
+
+                Text(
+                    text = device.name,
+                    fontSize = 20.sp,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+                Text(
+                    text = device.id,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+            }
+
+            Column(horizontalAlignment = Alignment.End) {
+
+                val icon = when (device.majorDeviceClass) {
+                    BluetoothClass.Device.Major.AUDIO_VIDEO -> Icons.Outlined.Headphones
+                    BluetoothClass.Device.Major.PHONE -> Icons.Outlined.Phone
+                    BluetoothClass.Device.Major.WEARABLE -> Icons.Outlined.Watch
+                    BluetoothClass.Device.Major.HEALTH -> Icons.Outlined.HealthAndSafety
+                    BluetoothClass.Device.Major.COMPUTER -> Icons.Outlined.Computer
+                    else -> Icons.Outlined.Bluetooth
+                }
+
+                Icon(
+                    modifier = Modifier.size(15.dp),
+                    imageVector = icon,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    contentDescription = null
+                )
+
+                Text(
+                    text = "${device.battery} %",
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+
+            }
+
+        }
+
+    }
+
+}
+
+@ExperimentalMaterial3Api
+@SuppressLint("MissingPermission")
+@Composable
+fun DeviceWithoutBatteryItem(device: Device) {
+
+    Card(
+        modifier = Modifier
+            .padding(vertical = 8.dp)
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(8.dp)
@@ -147,18 +224,9 @@ fun FullDeviceItem(device: Device) {
                 Icon(
                     modifier = Modifier.size(15.dp),
                     imageVector = icon,
-                    tint = if (isConnected) Color.Green else Color.Gray,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
                     contentDescription = null
                 )
-
-                if (isConnected && device.battery >= 0) {
-
-                    Text(
-                        text = "${device.battery} %",
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-
-                }
 
             }
 

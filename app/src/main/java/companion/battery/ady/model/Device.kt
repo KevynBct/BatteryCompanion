@@ -22,8 +22,11 @@ data class Device(
     val majorDeviceClass: Int
 ) {
 
-    val isAvailable: Boolean
+    val batteryAvailable: Boolean
         get() = isConnected && battery in 0..100
+
+    val batteryUnavailable: Boolean
+        get() = isConnected && battery !in 0..100
 
     @SuppressLint("MissingPermission")
     constructor(bluetoothDevice: BluetoothDevice, batteryLevel: Int) : this(
