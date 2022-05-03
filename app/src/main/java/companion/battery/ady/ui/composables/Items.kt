@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import companion.battery.ady.extensions.mirror
 import companion.battery.ady.model.Device
 
 @ExperimentalMaterial3Api
@@ -150,7 +151,7 @@ fun BatteryIndicator(battery: Int) {
 
         CircularProgressIndicator(
             modifier = Modifier
-                .scale(scaleX = -1f, scaleY = 1f)
+                .mirror()
                 .fillMaxWidth(.9f)
                 .aspectRatio(1f),
             progress = battery / 100f,
