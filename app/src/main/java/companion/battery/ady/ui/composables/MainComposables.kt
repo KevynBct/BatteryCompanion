@@ -73,7 +73,7 @@ fun EmptyContent() {
 @ExperimentalMaterial3Api
 fun DevicesList(viewModel: MainViewModel = viewModel()) {
 
-    val itemSize: Dp = (LocalConfiguration.current.screenWidthDp.dp / 2) - 10.dp
+    val itemSize: Dp = (LocalConfiguration.current.screenWidthDp.dp / 2) - 12.dp
 
     LazyColumn(
         modifier = Modifier

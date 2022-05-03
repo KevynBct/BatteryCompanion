@@ -35,7 +35,7 @@ fun DeviceWithBatteryItem(
     Card(
         modifier = Modifier
             .then(modifier)
-            .padding(vertical = 8.dp)
+            .padding(vertical = 4.dp)
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 shape = RoundedCornerShape(8.dp)
