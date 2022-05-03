@@ -138,7 +138,7 @@ fun DevicesList(viewModel: MainViewModel = viewModel()) {
                 mainAxisAlignment = FlowMainAxisAlignment.SpaceBetween
             ) {
 
-                previewDevices.forEach {
+                viewModel.devicesWithoutInfo.forEach {
 
                     DeviceWithoutBatteryItem(
                         modifier = Modifier

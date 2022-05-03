@@ -48,7 +48,7 @@ fun DeviceWithBatteryItem(
 
             SurfaceText(
                 text = device.name,
-                fontSize = 20.sp,
+                fontSize = 17.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.SemiBold
@@ -100,13 +100,14 @@ fun DeviceWithoutBatteryItem(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
             SurfaceText(
+                modifier = Modifier.weight(1f),
                 text = device.name,
-                fontSize = 20.sp,
+                fontSize = 17.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.SemiBold
