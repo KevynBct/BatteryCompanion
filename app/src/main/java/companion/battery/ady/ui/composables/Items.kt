@@ -15,6 +15,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -41,7 +42,7 @@ fun DeviceWithBatteryItem(
         shape = RoundedCornerShape(8.dp)
     ) {
 
-        Column(verticalArrangement = Arrangement.spacedBy(16.dp)) {
+        Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
 
             SurfaceText(
                 text = device.name,
@@ -58,20 +59,12 @@ fun DeviceWithBatteryItem(
                 contentAlignment = Alignment.Center
             ) {
 
-                val color = if (device.battery <= 20) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
-
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .aspectRatio(1f),
-                    progress = device.battery / 100f,
-                    color = color,
-                    strokeWidth = 8.dp
-                )
+                BatteryIndicator(battery = device.battery)
 
                 SurfaceText(
-                    text = "${device.battery} %",
-                    fontWeight = FontWeight.SemiBold
+                    text = "${device.battery}%",
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 20.sp,
                 )
 
 
@@ -108,7 +101,8 @@ fun DeviceWithoutBatteryItem(device: Device) {
                 text = device.name,
                 fontSize = 17.sp,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.Bold
             )
 
             Column {
@@ -132,6 +126,37 @@ fun DeviceWithoutBatteryItem(device: Device) {
             }
 
         }
+
+    }
+
+}
+
+@Composable
+fun BatteryIndicator(battery: Int) {
+
+    Box(contentAlignment = Alignment.Center) {
+
+        val color = if (battery <= 20) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
+        val backgroundColor = if (battery <= 20) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer
+
+        CircularProgressIndicator(
+            modifier = Modifier
+                .fillMaxWidth(.9f)
+                .aspectRatio(1f),
+            progress = 1f,
+            color = backgroundColor,
+            strokeWidth = 8.dp
+        )
+
+        CircularProgressIndicator(
+            modifier = Modifier
+                .scale(scaleX = -1f, scaleY = 1f)
+                .fillMaxWidth(.9f)
+                .aspectRatio(1f),
+            progress = battery / 100f,
+            color = color,
+            strokeWidth = 8.dp
+        )
 
     }
 
