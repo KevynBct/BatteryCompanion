@@ -50,7 +50,6 @@ val previewDevices = listOf(
 @Preview
 fun DevicePreview() {
 
-
     val itemSize: Dp = (LocalConfiguration.current.screenWidthDp.dp / 2) - 10.dp
 
     LazyColumn(

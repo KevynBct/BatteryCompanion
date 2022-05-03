@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import companion.battery.ady.extensions.iconsFor
 import companion.battery.ady.extensions.mirror
 import companion.battery.ady.model.Device
 
@@ -95,7 +96,8 @@ fun DeviceWithoutBatteryItem(device: Device) {
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
 
             SurfaceText(
@@ -106,25 +108,12 @@ fun DeviceWithoutBatteryItem(device: Device) {
                 fontWeight = FontWeight.Bold
             )
 
-            Column {
-
-                val icon = when (device.majorDeviceClass) {
-                    BluetoothClass.Device.Major.AUDIO_VIDEO -> Icons.Outlined.Headphones
-                    BluetoothClass.Device.Major.PHONE -> Icons.Outlined.Phone
-                    BluetoothClass.Device.Major.WEARABLE -> Icons.Outlined.Watch
-                    BluetoothClass.Device.Major.HEALTH -> Icons.Outlined.HealthAndSafety
-                    BluetoothClass.Device.Major.COMPUTER -> Icons.Outlined.Computer
-                    else -> Icons.Outlined.Bluetooth
-                }
-
-                Icon(
-                    modifier = Modifier.size(15.dp),
-                    imageVector = icon,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    contentDescription = null
-                )
-
-            }
+            Icon(
+                modifier = Modifier.size(15.dp),
+                imageVector = iconsFor(device.majorDeviceClass),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                contentDescription = null
+            )
 
         }
 
