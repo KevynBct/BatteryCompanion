@@ -95,7 +95,7 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
         if (permissions.all { it.value })
             getBluetoothDevices()
         else
-            Toast.makeText(this, "Permissions requises", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.permissions_needed), Toast.LENGTH_SHORT).show()
 
     }
 

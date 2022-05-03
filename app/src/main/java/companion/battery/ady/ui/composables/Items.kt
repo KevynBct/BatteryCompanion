@@ -51,7 +51,7 @@ fun DeviceWithBatteryItem(
                 fontSize = 20.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.SemiBold
             )
 
             Box(
@@ -81,10 +81,14 @@ fun DeviceWithBatteryItem(
 @ExperimentalMaterial3Api
 @SuppressLint("MissingPermission")
 @Composable
-fun DeviceWithoutBatteryItem(device: Device) {
+fun DeviceWithoutBatteryItem(
+    modifier: Modifier,
+    device: Device
+) {
 
     Card(
         modifier = Modifier
+            .then(modifier)
             .padding(vertical = 8.dp)
             .background(
                 color = MaterialTheme.colorScheme.surfaceVariant,
@@ -105,7 +109,7 @@ fun DeviceWithoutBatteryItem(device: Device) {
                 fontSize = 20.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.SemiBold
             )
 
             Icon(

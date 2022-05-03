@@ -1,0 +1,5 @@
+<resources>
+    <string name="permissions_needed">Pour faire fonctionner cette application, certaines autorisations sont nécessaires</string>
+    <string name="other_devices">Autres appareils</string>
+    <string name="connected_devices">Appareils connectés</string>
+</resources>

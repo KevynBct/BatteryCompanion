@@ -13,6 +13,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,6 +23,7 @@ import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
 import companion.battery.ady.MainViewModel
+import companion.battery.ady.R
 import companion.battery.ady.ui.theme.BatteryCompanionTheme
 
 @Composable
@@ -78,13 +81,19 @@ fun DevicesList(viewModel: MainViewModel = viewModel()) {
     LazyColumn(
         modifier = Modifier
             .statusBarsPadding()
-            .padding(horizontal = 8.dp)
+            .padding(horizontal = 8.dp, vertical = 40.dp)
             .fillMaxSize(),
     ) {
 
         item {
 
-            Spacer(modifier = Modifier.size(40.dp))
+            BackgroundText(
+                text = stringResource(id = R.string.connected_devices),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
+
+            Spacer(modifier = Modifier.size(10.dp))
 
         }
 
@@ -114,23 +123,36 @@ fun DevicesList(viewModel: MainViewModel = viewModel()) {
 
         item {
 
-            Spacer(modifier = Modifier.size(10.dp))
+            Spacer(modifier = Modifier.size(40.dp))
 
-            Text(
-                text = "Autres appareils",
+            BackgroundText(
+                text = stringResource(id = R.string.other_devices),
                 fontSize = 20.sp,
-                color = MaterialTheme.colorScheme.onBackground
+                fontWeight = FontWeight.ExtraBold
             )
 
             Spacer(modifier = Modifier.size(10.dp))
 
-            viewModel.devicesWithoutInfo.forEach { DeviceWithoutBatteryItem(device = it) }
+            FlowRow(
+                mainAxisSize = SizeMode.Expand,
+                mainAxisAlignment = FlowMainAxisAlignment.SpaceBetween
+            ) {
 
-            Spacer(modifier = Modifier.size(40.dp))
+                previewDevices.forEach {
+
+                    DeviceWithoutBatteryItem(
+                        modifier = Modifier
+                            .width(itemSize)
+                            .animateItemPlacement(),
+                        device = it
+                    )
+
+
+                }
+
+            }
 
             ColorItemList()
-
-            Spacer(modifier = Modifier.size(40.dp))
 
         }
 
