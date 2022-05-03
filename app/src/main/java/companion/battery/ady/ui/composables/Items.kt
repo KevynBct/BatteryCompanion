@@ -15,15 +15,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode
 import companion.battery.ady.model.Device
 
 @ExperimentalMaterial3Api
 @SuppressLint("MissingPermission")
 @Composable
-fun DeviceWithBatteryItem(modifier: Modifier, device: Device) {
+fun DeviceWithBatteryItem(
+    modifier: Modifier,
+    device: Device
+) {
 
     Card(
         modifier = Modifier
@@ -43,7 +53,8 @@ fun DeviceWithBatteryItem(modifier: Modifier, device: Device) {
                 text = device.name,
                 fontSize = 17.sp,
                 maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.Bold
             )
 
             Box(
@@ -61,11 +72,12 @@ fun DeviceWithBatteryItem(modifier: Modifier, device: Device) {
                         .aspectRatio(1f),
                     progress = device.battery / 100f,
                     color = color,
-                    strokeWidth = 4.dp
+                    strokeWidth = 8.dp
                 )
 
                 SurfaceText(
-                    text = "${device.battery} %"
+                    text = "${device.battery} %",
+                    fontWeight = FontWeight.SemiBold
                 )
 
 
@@ -124,6 +136,48 @@ fun DeviceWithoutBatteryItem(device: Device) {
                 )
 
             }
+
+        }
+
+    }
+
+}
+
+@ExperimentalMaterial3Api
+@Composable
+@Preview
+fun DevicePreview() {
+
+    val itemSize: Dp = (LocalConfiguration.current.screenWidthDp.dp / 2) - 10.dp
+
+    val devices = listOf(
+        Device(
+            name = "Phone",
+            id = "A",
+            battery = 76,
+            isConnected = true,
+            majorDeviceClass = BluetoothClass.Device.Major.PHONE
+        ),
+        Device(
+            name = "Headphones",
+            id = "B",
+            battery = 18,
+            isConnected = true,
+            majorDeviceClass = BluetoothClass.Device.Major.AUDIO_VIDEO
+        )
+    )
+    FlowRow(
+        mainAxisSize = SizeMode.Expand,
+        mainAxisAlignment = FlowMainAxisAlignment.SpaceBetween
+    ) {
+
+        devices.forEach {
+
+            DeviceWithBatteryItem(
+                modifier = Modifier.width(itemSize),
+                device = it
+            )
+
 
         }
 
