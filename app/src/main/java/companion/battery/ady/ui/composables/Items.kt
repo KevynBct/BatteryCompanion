@@ -47,7 +47,7 @@ fun DeviceWithBatteryItem(
 
             SurfaceText(
                 text = device.name,
-                fontSize = 17.sp,
+                fontSize = 20.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Bold
@@ -65,7 +65,7 @@ fun DeviceWithBatteryItem(
                 SurfaceText(
                     text = "${device.battery}%",
                     fontWeight = FontWeight.SemiBold,
-                    fontSize = 20.sp,
+                    fontSize = 17.sp,
                 )
 
 
@@ -100,7 +100,7 @@ fun DeviceWithoutBatteryItem(device: Device) {
 
             SurfaceText(
                 text = device.name,
-                fontSize = 17.sp,
+                fontSize = 20.sp,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Bold
