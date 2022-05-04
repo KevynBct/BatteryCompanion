@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -44,13 +46,28 @@ fun DeviceWithBatteryItem(
 
         Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
 
-            SurfaceText(
-                text = device.name,
-                fontSize = 17.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                fontWeight = FontWeight.SemiBold
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+
+                SurfaceText(
+                    modifier = Modifier.weight(1f),
+                    text = device.name,
+                    fontSize = 17.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = FontWeight.SemiBold
+                )
+
+                Icon(
+                    modifier = Modifier.alpha(if (device.isCharging) 1f else 0f),
+                    imageVector = Icons.Default.Bolt,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+
+            }
 
             Box(
                 modifier = Modifier
@@ -66,7 +83,6 @@ fun DeviceWithBatteryItem(
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 17.sp,
                 )
-
 
             }
 

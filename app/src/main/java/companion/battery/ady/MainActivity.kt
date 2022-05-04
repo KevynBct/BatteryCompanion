@@ -15,6 +15,8 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import companion.battery.ady.broadcasts.BatteryDeviceBroadcastListener
+import companion.battery.ady.broadcasts.BatteryDeviceBroadcastReceiver
 import companion.battery.ady.broadcasts.BluetoothBroadcastListener
 import companion.battery.ady.broadcasts.BluetoothBroadcastReceiver
 import companion.battery.ady.model.Device
@@ -24,12 +26,13 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 @ExperimentalMaterial3Api
 @ExperimentalFoundationApi
-class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
+class MainActivity : ComponentActivity(), BluetoothBroadcastListener, BatteryDeviceBroadcastListener {
 
 //region Variables
 
     private val viewModel: MainViewModel by viewModels()
-    private val broadcastReceiver = BluetoothBroadcastReceiver()
+    private val batteryDeviceBroadcastReceiver = BatteryDeviceBroadcastReceiver()
+    private val bluetoothBroadcastReceiver = BluetoothBroadcastReceiver()
 
 //endregion
 
@@ -59,14 +62,23 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
 
     override fun onStart() {
         super.onStart()
-        broadcastReceiver.listener = this
-        registerReceiver(broadcastReceiver, BluetoothBroadcastReceiver.filters)
+
+        batteryDeviceBroadcastReceiver.listener
+        registerReceiver(batteryDeviceBroadcastReceiver, BatteryDeviceBroadcastReceiver.filters)
+
+        bluetoothBroadcastReceiver.listener = this
+        registerReceiver(bluetoothBroadcastReceiver, BluetoothBroadcastReceiver.filters)
+
     }
 
     override fun onStop() {
         super.onStop()
-        broadcastReceiver.listener = null
-        unregisterReceiver(broadcastReceiver)
+
+        batteryDeviceBroadcastReceiver.listener = null
+        unregisterReceiver(batteryDeviceBroadcastReceiver)
+
+        bluetoothBroadcastReceiver.listener = null
+        unregisterReceiver(bluetoothBroadcastReceiver)
     }
 
 //endregion
@@ -112,6 +124,13 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener {
 //endregion
 
 //region Broadcast receiver
+
+    override fun onChargingStatusChange(isCharging: Boolean) {
+
+        viewModel.currentDevice.isCharging = isCharging
+        viewModel.updateDevice(device = viewModel.currentDevice)
+
+    }
 
     override fun onBroadcastReceive(device: Device) {
         viewModel.updateDevice(device = device)

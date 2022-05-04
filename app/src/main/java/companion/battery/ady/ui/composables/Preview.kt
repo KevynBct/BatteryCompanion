@@ -30,6 +30,7 @@ val previewDevices = listOf(
         id = "A",
         battery = 76,
         isConnected = true,
+        isCharging = true,
         majorDeviceClass = BluetoothClass.Device.Major.PHONE
     ),
     Device(
@@ -37,6 +38,7 @@ val previewDevices = listOf(
         id = "B",
         battery = 18,
         isConnected = true,
+        isCharging = false,
         majorDeviceClass = BluetoothClass.Device.Major.AUDIO_VIDEO
     ),
     Device(
@@ -44,6 +46,7 @@ val previewDevices = listOf(
         id = "C",
         battery = 45,
         isConnected = true,
+        isCharging = true,
         majorDeviceClass = BluetoothClass.Device.Major.WEARABLE
     )
 )

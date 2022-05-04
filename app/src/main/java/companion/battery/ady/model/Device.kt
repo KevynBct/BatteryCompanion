@@ -22,6 +22,7 @@ data class Device(
     val id: String,
     val battery: Int,
     val isConnected: Boolean,
+    var isCharging: Boolean,
     val majorDeviceClass: Int
 ) : Parcelable {
 
@@ -37,6 +38,7 @@ data class Device(
         id = bluetoothDevice.address,
         battery = batteryLevel,
         isConnected = bluetoothDevice.isConnected,
+        isCharging = false,
         majorDeviceClass = bluetoothDevice.bluetoothClass.majorDeviceClass
     )
 

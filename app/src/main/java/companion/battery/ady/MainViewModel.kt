@@ -29,6 +29,19 @@ class MainViewModel @Inject constructor(
         bluetoothManager.adapter
     }
 
+    @SuppressLint("HardwareIds")
+    private val currentDeviceId = Settings.Secure.getString(BatteryCompanionApp.context.contentResolver, Settings.Secure.ANDROID_ID)
+    private val currentDeviceName  = Settings.Global.getString(BatteryCompanionApp.context.contentResolver, "device_name")
+
+    val currentDevice = Device(
+        name = currentDeviceName,
+        id = currentDeviceId,
+        battery = getCurrentBattery(),
+        isConnected = true,
+        isCharging = getCurrentChargingStatus(),
+        majorDeviceClass = BluetoothClass.Device.Major.PHONE
+    )
+
 //endregion
 
 //region LiveData
@@ -36,6 +49,38 @@ class MainViewModel @Inject constructor(
     private val _devices = mutableStateListOf<Device>()
     val devicesWithInfo: List<Device> get() = _devices.filter { it.batteryAvailable }.sortedBy { it.name }
     val devicesWithoutInfo: List<Device> get() = _devices.filter { it.batteryUnavailable }.sortedBy { it.name }
+
+//endregion
+
+//region Private Methods
+
+    private fun getCurrentBattery() : Int {
+
+        val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { filter ->
+            BatteryCompanionApp.context.registerReceiver(null, filter)
+        }
+
+        val batteryPct: Float? = batteryStatus?.let { intent ->
+            val level: Int = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
+            val scale: Int = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
+            level * 100 / scale.toFloat()
+        }
+
+        return batteryPct?.roundToInt() ?: -1
+
+    }
+
+    private fun getCurrentChargingStatus(): Boolean {
+
+        val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { filter ->
+            BatteryCompanionApp.context.registerReceiver(null, filter)
+        }
+
+        val status: Int = batteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1) ?: -1
+
+        return status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
+
+    }
 
 //endregion
 
@@ -52,7 +97,8 @@ class MainViewModel @Inject constructor(
         _devices.clear()
         _devices.addAll(filteredDevices)
 
-        getCurrentInfo()
+        _devices.add(currentDevice)
+
     }
 
     fun updateDevice(device: Device) {
@@ -61,43 +107,6 @@ class MainViewModel @Inject constructor(
 
         if (device.isConnected)
             _devices.add(device)
-
-    }
-
-//endregion
-
-//region Private Methods
-
-    @SuppressLint("HardwareIds")
-    private fun getCurrentInfo() {
-
-        val deviceName  = Settings.Global.getString(BatteryCompanionApp.context.contentResolver, "device_name")
-
-        val currentDevice = Device(
-            name = deviceName,
-            id = Settings.Secure.getString(BatteryCompanionApp.context.contentResolver, Settings.Secure.ANDROID_ID),
-            battery = getCurrentBattery(),
-            isConnected = true,
-            majorDeviceClass = BluetoothClass.Device.Major.PHONE
-        )
-
-        updateDevice(currentDevice)
-
-    }
-
-    private fun getCurrentBattery() : Int {
-
-        val batteryStatus: Intent? = IntentFilter(Intent.ACTION_BATTERY_CHANGED).let { filter ->
-            BatteryCompanionApp.context.registerReceiver(null, filter)
-        }
-
-        val batteryPct: Float? = batteryStatus?.let { intent ->
-            val level: Int = intent.getIntExtra(BatteryManager.EXTRA_LEVEL, -1)
-            val scale: Int = intent.getIntExtra(BatteryManager.EXTRA_SCALE, -1)
-            level * 100 / scale.toFloat()
-        }
-
-        return batteryPct?.roundToInt() ?: -1
 
     }
 
