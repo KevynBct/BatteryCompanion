@@ -154,8 +154,6 @@ fun DevicesList(viewModel: MainViewModel = viewModel()) {
 
             }
 
-            ColorItemList()
-
         }
 
         item { Spacer(modifier = Modifier.size(40.dp)) }
