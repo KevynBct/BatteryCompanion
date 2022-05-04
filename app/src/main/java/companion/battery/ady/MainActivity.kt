@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener, BatteryDev
     override fun onStart() {
         super.onStart()
 
-        batteryDeviceBroadcastReceiver.listener
+        batteryDeviceBroadcastReceiver.listener = this
         registerReceiver(batteryDeviceBroadcastReceiver, BatteryDeviceBroadcastReceiver.filters)
 
         bluetoothBroadcastReceiver.listener = this
