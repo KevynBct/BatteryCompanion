@@ -57,11 +57,25 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener, BatteryDev
         super.onResume()
 
         getBluetoothDevices()
-
     }
 
     override fun onStart() {
         super.onStart()
+
+        registerBroadcastReceivers()
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        unregisterBroadcastReceivers()
+    }
+
+//endregion
+
+//region Private Methods
+
+    private fun registerBroadcastReceivers() {
 
         batteryDeviceBroadcastReceiver.listener = this
         registerReceiver(batteryDeviceBroadcastReceiver, BatteryDeviceBroadcastReceiver.filters)
@@ -71,19 +85,15 @@ class MainActivity : ComponentActivity(), BluetoothBroadcastListener, BatteryDev
 
     }
 
-    override fun onStop() {
-        super.onStop()
+    private fun unregisterBroadcastReceivers() {
 
         batteryDeviceBroadcastReceiver.listener = null
         unregisterReceiver(batteryDeviceBroadcastReceiver)
 
         bluetoothBroadcastReceiver.listener = null
         unregisterReceiver(bluetoothBroadcastReceiver)
+
     }
-
-//endregion
-
-//region Private Methods
 
     private fun getBluetoothDevices() {
 
