@@ -48,7 +48,6 @@ class MainViewModel @Inject constructor(
         val filteredDevices = bondedDevices
             .map { Device(it) }
             .filter { it.isConnected }
-            .sortedBy { it.name }
 
         _devices.clear()
         _devices.addAll(filteredDevices)
