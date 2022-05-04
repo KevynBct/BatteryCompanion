@@ -20,6 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ConstraintLayout
 import companion.battery.ady.extensions.iconsFor
 import companion.battery.ady.extensions.mirror
 import companion.battery.ady.model.Device
@@ -46,44 +47,57 @@ fun DeviceWithBatteryItem(
 
         Column(verticalArrangement = Arrangement.spacedBy(24.dp)) {
 
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
+            SurfaceText(
+                text = device.name,
+                fontSize = 17.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.SemiBold
+            )
 
-                SurfaceText(
-                    modifier = Modifier.weight(1f),
-                    text = device.name,
-                    fontSize = 17.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                Icon(
-                    modifier = Modifier.alpha(if (device.isCharging) 1f else 0f),
-                    imageVector = Icons.Default.Bolt,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary
-                )
-
-            }
-
-            Box(
+            ConstraintLayout(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f),
-                contentAlignment = Alignment.Center
+                    .aspectRatio(1f)
             ) {
 
-                BatteryIndicator(battery = device.battery)
+                val (indicator, icon, text) = createRefs()
+
+                BatteryIndicator(
+                    modifier = Modifier.constrainAs(indicator) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
+                    battery = device.battery
+                )
 
                 SurfaceText(
+                    modifier = Modifier.constrainAs(text) {
+                        top.linkTo(parent.top)
+                        bottom.linkTo(parent.bottom)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
+                    },
                     text = "${device.battery}%",
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 17.sp,
                 )
 
+                Icon(
+                    modifier = Modifier
+                        .constrainAs(icon) {
+                            bottom.linkTo(text.top)
+                            start.linkTo(parent.start)
+                            end.linkTo(parent.end)
+                        }
+                        .alpha(if (device.isCharging) 1f else 0f),
+                    imageVector = Icons.Default.Bolt,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                
             }
 
         }
@@ -142,9 +156,15 @@ fun DeviceWithoutBatteryItem(
 }
 
 @Composable
-fun BatteryIndicator(battery: Int) {
+fun BatteryIndicator(
+    modifier: Modifier = Modifier,
+    battery: Int
+) {
 
-    Box(contentAlignment = Alignment.Center) {
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
 
         val color = if (battery <= 20) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
 
