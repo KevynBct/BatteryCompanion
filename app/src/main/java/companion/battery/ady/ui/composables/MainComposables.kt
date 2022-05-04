@@ -81,9 +81,11 @@ fun DevicesList(viewModel: MainViewModel = viewModel()) {
     LazyColumn(
         modifier = Modifier
             .statusBarsPadding()
-            .padding(horizontal = 8.dp, vertical = 40.dp)
+            .padding(horizontal = 8.dp)
             .fillMaxSize(),
     ) {
+
+        item { Spacer(modifier = Modifier.size(40.dp)) }
 
         item {
 
@@ -155,6 +157,8 @@ fun DevicesList(viewModel: MainViewModel = viewModel()) {
             ColorItemList()
 
         }
+
+        item { Spacer(modifier = Modifier.size(40.dp)) }
 
     }
 
