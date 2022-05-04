@@ -1,21 +1,18 @@
 package companion.battery.ady.ui.composables
 
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothClass
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -134,14 +131,14 @@ fun BatteryIndicator(battery: Int) {
     Box(contentAlignment = Alignment.Center) {
 
         val color = if (battery <= 20) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.primary
-        val backgroundColor = if (battery <= 20) MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.primaryContainer
 
         CircularProgressIndicator(
             modifier = Modifier
+                .alpha(.1f)
                 .fillMaxWidth(.9f)
                 .aspectRatio(1f),
             progress = 1f,
-            color = backgroundColor,
+            color = color,
             strokeWidth = 8.dp
         )
 
